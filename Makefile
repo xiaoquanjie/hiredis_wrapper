@@ -1,6 +1,6 @@
 ALL_DIR_SRC 	= ./
 INCLUDES 	= -Ihiredis
-CPPFLAGS	= -pthread -gdwarf-2 -lhiredis
+CPPFLAGS	= -pthread -gdwarf-2 -lhiredis -L ./
 
 all : project
 
