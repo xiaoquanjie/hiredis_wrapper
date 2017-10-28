@@ -13,5 +13,60 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="hiredis">
+      <UniqueIdentifier>{8b54d6b5-0fa1-4032-ac39-03535efe41d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hiredis\wrapper">
+      <UniqueIdentifier>{76911ec7-5d3e-4288-8feb-efbbd924a2b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hiredis\adapters">
+      <UniqueIdentifier>{be5d8e2e-1e6f-4f67-92fe-731294fa2f1d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="test_main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="hiredis\async.h">
+      <Filter>hiredis</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\hiredis.h">
+      <Filter>hiredis</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\read.h">
+      <Filter>hiredis</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\sds.h">
+      <Filter>hiredis</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\adapters\ae.h">
+      <Filter>hiredis\adapters</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\adapters\glib.h">
+      <Filter>hiredis\adapters</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\adapters\ivykis.h">
+      <Filter>hiredis\adapters</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\adapters\libev.h">
+      <Filter>hiredis\adapters</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\adapters\libevent.h">
+      <Filter>hiredis\adapters</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\adapters\libuv.h">
+      <Filter>hiredis\adapters</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\adapters\macosx.h">
+      <Filter>hiredis\adapters</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\adapters\qt.h">
+      <Filter>hiredis\adapters</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\wrapper\redis_wrapper.hpp">
+      <Filter>hiredis\wrapper</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
