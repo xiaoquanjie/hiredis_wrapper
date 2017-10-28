@@ -4,6 +4,7 @@
 #include <sstream>
 
 //http://www.cnblogs.com/hjwublog/p/5639990.html
+//https://redis.io/commands/setbit
 
 // redis¡¨Ω”
 class RedisConnection
