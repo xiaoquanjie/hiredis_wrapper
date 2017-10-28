@@ -68,5 +68,20 @@
     <ClInclude Include="hiredis\wrapper\redis_wrapper.hpp">
       <Filter>hiredis\wrapper</Filter>
     </ClInclude>
+    <ClInclude Include="hiredis\wrapper\variant.h">
+      <Filter>hiredis\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\wrapper\redis_wrapper_config.hpp">
+      <Filter>hiredis\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\wrapper\redis_connection.hpp">
+      <Filter>hiredis\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\wrapper\redis_pool.hpp">
+      <Filter>hiredis\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\wrapper\redis_string.hpp">
+      <Filter>hiredis\wrapper</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

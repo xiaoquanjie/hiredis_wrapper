@@ -71,6 +71,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>E:\socket\hiredis_wrapper\hiredis;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -157,7 +158,12 @@
     <ClInclude Include="hiredis\hiredis.h" />
     <ClInclude Include="hiredis\read.h" />
     <ClInclude Include="hiredis\sds.h" />
+    <ClInclude Include="hiredis\wrapper\redis_string.hpp" />
+    <ClInclude Include="hiredis\wrapper\redis_connection.hpp" />
+    <ClInclude Include="hiredis\wrapper\redis_pool.hpp" />
     <ClInclude Include="hiredis\wrapper\redis_wrapper.hpp" />
+    <ClInclude Include="hiredis\wrapper\redis_wrapper_config.hpp" />
+    <ClInclude Include="hiredis\wrapper\variant.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
