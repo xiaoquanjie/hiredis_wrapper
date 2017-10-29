@@ -1,0 +1,6 @@
+project:
+	g++ -c test_main.cpp -Ihiredis
+	g++ -o project test_main.o -lhiredis -L.
+	
+clean:
+	rm -f project test_main.o

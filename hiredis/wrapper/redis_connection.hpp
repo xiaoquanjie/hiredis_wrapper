@@ -76,6 +76,10 @@ public:
 
 	inline void GetRangeCommand(const char* key, int beg_idx, int end_idx, std::string& value);
 
+	// 返回原位的值，只会是0和1
+	inline int SetbitCommand(const char* key, unsigned int offset, int value);
+	inline int GetbitCommand(const char* key, unsigned int offset);
+
 private:
 	redisContext* _context;
 };

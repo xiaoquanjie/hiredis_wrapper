@@ -435,4 +435,67 @@ inline int RedisConnection::SetRangeCommand(const char* key, int beg_idx, const 
 	return SetRangeCommand(key, beg_idx, std::string(value, N));
 }
 
+inline int RedisConnection::SetbitCommand(const char* key, unsigned int offset, int value)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+
+	if (value != 0)
+		value = 1;
+	std::string k = "SETBIT " + std::string(key) + " %d %d";
+	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), offset, value);
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	value = 0;
+	RedisException error;
+	do 
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_INTEGER) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+			break;
+		}
+		value = reply->integer;
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+
+	return value;
+}
+inline int RedisConnection::GetbitCommand(const char* key, unsigned int offset)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+
+	std::string k = "GETBIT " + std::string(key) + " %d";
+	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), offset);
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	int value = 0;
+	RedisException error;
+	do 
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_INTEGER) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+			break;
+		}
+		value = reply->integer;
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+
+	return value;
+}
+
 #endif
