@@ -16,6 +16,8 @@
 #include "../hiredis.h"
 #include <string>
 #include <string.h>
+#include <vector>
+#include <list>
 
 #ifdef M_PLATFORM_WIN
 #include <memory>

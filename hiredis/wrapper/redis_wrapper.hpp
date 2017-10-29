@@ -4,6 +4,8 @@
 #include "redis_wrapper_config.hpp"
 #include "redis_connection.hpp"
 #include "redis_pool.hpp"
+#include "redis_others.hpp"
 #include "redis_string.hpp"
+#include "redis_list.hpp"
 
 #endif

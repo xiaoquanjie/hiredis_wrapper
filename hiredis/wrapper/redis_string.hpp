@@ -2,13 +2,13 @@
 #define M_REDIS_STRING_INCLUDE
 
 template<typename T>
-inline void RedisConnection::SetCommand(const char* key, T value)
+inline void RedisConnection::set(const char* key, T value)
 {
 	std::ostringstream oss;
 	oss << value;
-	SetCommand(key, oss.str());
+	set(key, oss.str());
 }
-inline void RedisConnection::SetCommand(const char* key, const std::string& value)
+inline void RedisConnection::set(const char* key, const std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -38,25 +38,25 @@ inline void RedisConnection::SetCommand(const char* key, const std::string& valu
 	if (!error.Empty())
 		throw error;
 }
-inline void RedisConnection::SetCommand(const char* key, const char* value, unsigned int len)
+inline void RedisConnection::set(const char* key, const char* value, unsigned int len)
 {
-	SetCommand(key, std::string(value, len));
+	set(key, std::string(value, len));
 }
 template<int N>
-inline void RedisConnection::SetCommand(const char* key, const char(&value)[N])
+inline void RedisConnection::set(const char* key, const char(&value)[N])
 {
-	SetCommand(key, std::string(value, N));
+	set(key, std::string(value, N));
 }
 
 template<typename T>
-inline void RedisConnection::GetCommand(const char* key, T& value)
+inline void RedisConnection::get(const char* key, T& value)
 {
 	std::string v;
-	GetCommand(key, v);
+	get(key, v);
 	std::istringstream iss(v);
 	iss >> value;
 }
-inline void RedisConnection::GetCommand(const char* key, std::string& value)
+inline void RedisConnection::get(const char* key, std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -85,7 +85,7 @@ inline void RedisConnection::GetCommand(const char* key, std::string& value)
 	if (!error.Empty())
 		throw error;
 }
-inline void RedisConnection::GetCommand(const char* key, char* value, unsigned int len)
+inline void RedisConnection::get(const char* key, char* value, unsigned int len)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -117,13 +117,13 @@ inline void RedisConnection::GetCommand(const char* key, char* value, unsigned i
 }
 
 
-inline void RedisConnection::IncrbyCommand(const char* key, int step)
+inline void RedisConnection::incrby(const char* key, int step)
 {
 	int value = 0;
-	IncrbyCommand(key, step, value);
+	incrby(key, step, value);
 }
 template<typename T>
-inline void RedisConnection::IncrbyCommand(const char* key, int step, T& new_value)
+inline void RedisConnection::incrby(const char* key, int step, T& new_value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -150,19 +150,19 @@ inline void RedisConnection::IncrbyCommand(const char* key, int step, T& new_val
 	if (!error.Empty())
 		throw error;
 }
-inline void RedisConnection::IncrCommand(const char* key)
+inline void RedisConnection::incr(const char* key)
 {
-	IncrbyCommand(key, 1);
+	incrby(key, 1);
 }
 template<typename T>
-inline void RedisConnection::IncrCommand(const char* key, T& new_value)
+inline void RedisConnection::incr(const char* key, T& new_value)
 {
-	IncrbyCommand(key, 1, new_value);
+	incrby(key, 1, new_value);
 }
 
 
 template<typename T>
-inline void RedisConnection::DecrbyCommand(const char* key, int step, T& new_value)
+inline void RedisConnection::decrby(const char* key, int step, T& new_value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -189,23 +189,23 @@ inline void RedisConnection::DecrbyCommand(const char* key, int step, T& new_val
 	if (!error.Empty())
 		throw error;
 }
-inline void RedisConnection::DecrbyCommand(const char* key, int step)
+inline void RedisConnection::decrby(const char* key, int step)
 {
 	int value = 0;
-	DecrbyCommand(key, step, value);
+	decrby(key, step, value);
 }
 template<typename T>
-inline void RedisConnection::DecrCommand(const char* key, T& new_value)
+inline void RedisConnection::decr(const char* key, T& new_value)
 {
-	DecrbyCommand(key, 1, new_value);
+	decrby(key, 1, new_value);
 }
-inline void RedisConnection::DecrCommand(const char* key)
+inline void RedisConnection::decr(const char* key)
 {
-	DecrbyCommand(key, 1);
+	decrby(key, 1);
 }
 
 
-inline int RedisConnection::StrlenCommand(const char* key)
+inline int RedisConnection::strlen(const char* key)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -235,7 +235,7 @@ inline int RedisConnection::StrlenCommand(const char* key)
 
 	return len;
 }
-inline int RedisConnection::AppendCommand(const char* key, const std::string& app_value)
+inline int RedisConnection::append(const char* key, const std::string& app_value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -265,20 +265,20 @@ inline int RedisConnection::AppendCommand(const char* key, const std::string& ap
 
 	return len;
 }
-inline int RedisConnection::AppendCommand(const char* key, const char* value, unsigned int len)
+inline int RedisConnection::append(const char* key, const char* value, unsigned int len)
 {
-	return AppendCommand(key, std::string(value, len));
+	return append(key, std::string(value, len));
 }
 
 
 template<typename T>
-inline bool RedisConnection::SetnxCommand(const char* key, T value)
+inline bool RedisConnection::setnx(const char* key, T value)
 {
 	std::ostringstream oss;
 	oss << value;
-	return SetnxCommand(key, oss.str());
+	return setnx(key, oss.str());
 }
-inline bool RedisConnection::SetnxCommand(const char* key, const std::string& value)
+inline bool RedisConnection::setnx(const char* key, const std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -308,25 +308,25 @@ inline bool RedisConnection::SetnxCommand(const char* key, const std::string& va
 
 	return flag;
 }
-inline bool RedisConnection::SetnxCommand(const char* key, const char* value, unsigned int len)
+inline bool RedisConnection::setnx(const char* key, const char* value, unsigned int len)
 {
-	return SetnxCommand(key, std::string(value, len));
+	return setnx(key, std::string(value, len));
 }
 template<int N>
-inline bool RedisConnection::SetnxCommand(const char* key, const char(&value)[N])
+inline bool RedisConnection::setnx(const char* key, const char(&value)[N])
 {
-	return SetnxCommand(key, std::string(value, N));
+	return setnx(key, std::string(value, N));
 }
 
 
 template<typename T>
-inline void RedisConnection::SetexCommand(const char* key, T value, time_t expire)
+inline void RedisConnection::setex(const char* key, T value, time_t expire)
 {
 	std::ostringstream oss;
 	oss << value;
-	SetexCommand(key, oss.str(), expire);
+	setex(key, oss.str(), expire);
 }
-inline void RedisConnection::SetexCommand(const char* key, const std::string& value, time_t expire)
+inline void RedisConnection::setex(const char* key, const std::string& value, time_t expire)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -356,17 +356,17 @@ inline void RedisConnection::SetexCommand(const char* key, const std::string& va
 	if (!error.Empty())
 		throw error;
 }
-inline void RedisConnection::SetexCommand(const char* key, const char* value, unsigned int len, time_t expire)
+inline void RedisConnection::setex(const char* key, const char* value, unsigned int len, time_t expire)
 {
-	SetexCommand(key, std::string(value, len), expire);
+	setex(key, std::string(value, len), expire);
 }
 template<int N>
-inline void RedisConnection::SetexCommand(const char* key, const char(&value)[N], time_t expire)
+inline void RedisConnection::setex(const char* key, const char(&value)[N], time_t expire)
 {
-	SetexCommand(key, std::string(value, N), expire);
+	setex(key, std::string(value, N), expire);
 }
 
-inline void RedisConnection::GetRangeCommand(const char* key, int beg_idx, int end_idx, std::string& value)
+inline void RedisConnection::getrange(const char* key, int beg_idx, int end_idx, std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -395,11 +395,11 @@ inline void RedisConnection::GetRangeCommand(const char* key, int beg_idx, int e
 		throw error;
 }
 
-inline int RedisConnection::SetRangeCommand(const char* key, int beg_idx, const char* value, unsigned int len)
+inline int RedisConnection::setrange(const char* key, int beg_idx, const char* value, unsigned int len)
 {
-	return SetRangeCommand(key, beg_idx, std::string(value, len));
+	return setrange(key, beg_idx, std::string(value, len));
 }
-inline int RedisConnection::SetRangeCommand(const char* key, int beg_idx, const std::string& value)
+inline int RedisConnection::setrange(const char* key, int beg_idx, const std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -430,12 +430,12 @@ inline int RedisConnection::SetRangeCommand(const char* key, int beg_idx, const 
 	return len;
 }
 template<int N>
-inline int RedisConnection::SetRangeCommand(const char* key, int beg_idx, const char(&value)[N])
+inline int RedisConnection::setrange(const char* key, int beg_idx, const char(&value)[N])
 {
-	return SetRangeCommand(key, beg_idx, std::string(value, N));
+	return setrange(key, beg_idx, std::string(value, N));
 }
 
-inline int RedisConnection::SetbitCommand(const char* key, unsigned int offset, int value)
+inline int RedisConnection::setbit(const char* key, unsigned int offset, int value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -467,7 +467,7 @@ inline int RedisConnection::SetbitCommand(const char* key, unsigned int offset, 
 
 	return value;
 }
-inline int RedisConnection::GetbitCommand(const char* key, unsigned int offset)
+inline int RedisConnection::getbit(const char* key, unsigned int offset)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 

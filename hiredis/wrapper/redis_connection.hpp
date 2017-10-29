@@ -14,116 +14,155 @@ public:
 
 	inline RedisConnection(redisContext* context);
 
-	bool IsConnected()const {
+	bool connected()const {
 		return (_context != 0);
 	}
 
 	// 超时命令
-	inline bool ExpireCommand(const char* key, time_t expire);
+	inline bool expire(const char* key, time_t expire);
+	// 1为key存在，0表示key不存在
+	inline int del(const char* key);
+	inline int del(const std::vector<std::string>& keys);
+	inline int del(const std::list<std::string>& keys);
 
 	template<typename T>
-	inline void SetCommand(const char* key, T value);
-	inline void SetCommand(const char* key, const std::string& value);
-	inline void SetCommand(const char* key, const char* value, unsigned int len);
+	inline void set(const char* key, T value);
+	inline void set(const char* key, const std::string& value);
+	inline void set(const char* key, const char* value, unsigned int len);
 	template<int N>
-	inline void SetCommand(const char* key, const char(&value)[N]);
+	inline void set(const char* key, const char(&value)[N]);
 
 	template<typename T>
-	inline void GetCommand(const char* key, T& value);
-	inline void GetCommand(const char* key, std::string& value);
-	inline void GetCommand(const char* key, char* value,unsigned int len);
+	inline void get(const char* key, T& value);
+	inline void get(const char* key, std::string& value);
+	inline void get(const char* key, char* value,unsigned int len);
 
-	inline void IncrbyCommand(const char* key, int step);
+	inline void incrby(const char* key, int step);
 	template<typename T>
-	inline void IncrbyCommand(const char* key, int step, T& new_value);
-	inline void IncrCommand(const char* key);
+	inline void incrby(const char* key, int step, T& new_value);
+	inline void incr(const char* key);
 	template<typename T>
-	inline void IncrCommand(const char* key,T& new_value);
+	inline void incr(const char* key,T& new_value);
 
 	template<typename T>
-	inline void DecrbyCommand(const char* key, int step, T& new_value);
-	inline void DecrbyCommand(const char* key, int step);
+	inline void decrby(const char* key, int step, T& new_value);
+	inline void decrby(const char* key, int step);
 	template<typename T>
-	inline void DecrCommand(const char* key, T& new_value);
-	inline void DecrCommand(const char* key);
+	inline void decr(const char* key, T& new_value);
+	inline void decr(const char* key);
 
 	// 返回长度
-	inline int StrlenCommand(const char* key);
+	inline int strlen(const char* key);
 	// 返回新长度
-	inline int AppendCommand(const char* key, const std::string& app_value);
-	inline int AppendCommand(const char* key, const char* value, unsigned int len);
+	inline int append(const char* key, const std::string& app_value);
+	inline int append(const char* key, const char* value, unsigned int len);
 
 	// 设置key对应的值为String类型的value，如果key已经存在则返回false
 	template<typename T>
-	inline bool SetnxCommand(const char* key, T value);
-	inline bool SetnxCommand(const char* key, const std::string& value);
-	inline bool SetnxCommand(const char* key, const char* value, unsigned int len);
+	inline bool setnx(const char* key, T value);
+	inline bool setnx(const char* key, const std::string& value);
+	inline bool setnx(const char* key, const char* value, unsigned int len);
 	template<int N>
-	inline bool SetnxCommand(const char* key, const char(&value)[N]);
+	inline bool setnx(const char* key, const char(&value)[N]);
 
 	template<typename T>
-	inline void SetexCommand(const char* key, T value, time_t expire);
-	inline void SetexCommand(const char* key, const std::string& value, time_t expire);
-	inline void SetexCommand(const char* key, const char* value, unsigned int len, time_t expire);
+	inline void setex(const char* key, T value, time_t expire);
+	inline void setex(const char* key, const std::string& value, time_t expire);
+	inline void setex(const char* key, const char* value, unsigned int len, time_t expire);
 	template<int N>
-	inline void SetexCommand(const char* key, const char(&value)[N], time_t expire);
+	inline void setex(const char* key, const char(&value)[N], time_t expire);
 
 	// 返回修改后字符串长度
-	inline int SetRangeCommand(const char* key, int beg_idx, const char* value, unsigned int len);
-	inline int SetRangeCommand(const char* key, int beg_idx, const std::string& value);
+	inline int setrange(const char* key, int beg_idx, const char* value, unsigned int len);
+	inline int setrange(const char* key, int beg_idx, const std::string& value);
 	template<int N>
-	inline int SetRangeCommand(const char* key, int beg_idx, const char(&value)[N]);
+	inline int setrange(const char* key, int beg_idx, const char(&value)[N]);
 
-	inline void GetRangeCommand(const char* key, int beg_idx, int end_idx, std::string& value);
+	inline void getrange(const char* key, int beg_idx, int end_idx, std::string& value);
 
 	// 返回原位的值，只会是0和1
-	inline int SetbitCommand(const char* key, unsigned int offset, int value);
-	inline int GetbitCommand(const char* key, unsigned int offset);
+	inline int setbit(const char* key, unsigned int offset, int value);
+	inline int getbit(const char* key, unsigned int offset);
+
+	template<typename T>
+	inline int lpush(const char* key, const T& value);
+	template<int N>
+	inline int lpush(const char* key, const char(&value)[N]);
+	inline int lpush(const char* key, const std::string& value);
+	inline int lpush(const char* key, const char* value, unsigned int len);
+	inline int lpush(const char* key, const std::vector<std::string>& values);
+	inline int lpush(const char* key, const std::list<std::string>& values);
+	template<typename T>
+	inline int lpush(const char* key, const std::vector<T>& values);
+	template<typename T>
+	inline int lpush(const char* key, const std::list<T>& values);
+
+	template<typename T>
+	inline void lrange(const char* key, int beg_idx, int end_idx, std::list<T>& values);
+	template<typename T>
+	inline void lrange(const char* key, int beg_idx, int end_idx, std::vector<T>& values);
+	inline void lrange(const char* key, int beg_idx, int end_idx, std::list<std::string>& values);
+	inline void lrange(const char* key, int beg_idx, int end_idx, std::vector<std::string>& values);
+
+	// 当元素不存在时返回False
+	template<typename T>
+	inline bool lpop(const char* key, T& value);
+	inline bool lpop(const char*key, std::string& value);
+	inline bool lpop(const char*key, char* value, unsigned int len);
+
+	template<typename T>
+	inline int rpush(const char* key, const T& value);
+	template<int N>
+	inline int rpush(const char* key, const char(&value)[N]);
+	inline int rpush(const char* key, const std::string& value);
+	inline int rpush(const char* key, const char* value, unsigned int len);
+	inline int rpush(const char* key, const std::vector<std::string>& values);
+	inline int rpush(const char* key, const std::list<std::string>& values);
+	template<typename T>
+	inline int rpush(const char* key, const std::vector<T>& values);
+	template<typename T>
+	inline int rpush(const char* key, const std::list<T>& values);
+
+	// 当元素不存在时返回False
+	template<typename T>
+	inline bool rpop(const char* key, T& value);
+	inline bool rpop(const char*key, std::string& value);
+	inline bool rpop(const char*key, char* value, unsigned int len);
+
+	inline int llen(const char* key);
+
+	// 如果元素不存在返回false
+	template<typename T>
+	inline bool lindex(const char* key, int idx, T&value);
+	inline bool lindex(const char* key, int idx, std::string&value);
+	inline bool lindex(const char* key, int idx, char* value, int len);
+
+	template<typename T>
+	inline void lset(const char* key, int idx, T value);
+	inline void lset(const char* key, int idx, const std::string& value);
+	inline void lset(const char* key, int idx, const char* value, unsigned int len);
+	template<int N>
+	inline void lset(const char* key, int idx, const char(&value)[N]);
+
+	template<typename T>
+	inline int lrem(const char* key, int idx, T value);
+	inline void ltrim(const char*key, int beg_idx, int end_idx);
+
+	template<typename T1,typename T2>
+	inline int linsert(const char* key, bool b_or_a, const T1& value1, const T2& value2);
+	inline int linsert(const char* key, bool b_or_a, const std::string& value1, const std::string&value2);
+
+	template<typename T>
+	inline bool rpoplpush(const char*key1, const char*key2, T& value);
+	inline bool rpoplpush(const char*key1, const char*key2, std::string& value);
 
 private:
 	redisContext* _context;
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-inline RedisConnection::RedisConnection() 
-	:_context(0) {}
-
-inline RedisConnection::RedisConnection(redisContext* context)
-	: _context(context) {}
 
 #define M_CHECK_REDIS_CONTEXT(context)\
 	if (!_context) throw RedisException(M_ERR_REDIS_NOT_CONNECTED);
 
-inline bool RedisConnection::ExpireCommand(const char* key, time_t expire)
-{
-	M_CHECK_REDIS_CONTEXT(_context);
-
-	std::string k = "EXPIRE " + std::string(key) + " %d";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), expire);
-	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
-
-	int success_flag = 0;
-	RedisException error;
-	do 
-	{
-		if (reply->type == REDIS_REPLY_ERROR) {
-			error = RedisException(reply->str);
-			break;
-		}
-		if (reply->type != REDIS_REPLY_INTEGER) {
-			error = RedisException(M_ERR_NOT_DEFINED);
-			break;
-		}
-		success_flag = reply->integer;
-	} while (false);
-
-	freeReplyObject(reply);
-	if (!error.Empty())
-		throw error;
-
-	return (success_flag == 1 ? true : false);
-}
 
 #endif
