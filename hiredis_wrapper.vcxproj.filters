@@ -83,5 +83,14 @@
     <ClInclude Include="hiredis\wrapper\redis_string.hpp">
       <Filter>hiredis\wrapper</Filter>
     </ClInclude>
+    <ClInclude Include="hiredis\wrapper\redis_list.hpp">
+      <Filter>hiredis\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\wrapper\redis_others.hpp">
+      <Filter>hiredis\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\wrapper\redis_hash.hpp">
+      <Filter>hiredis\wrapper</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

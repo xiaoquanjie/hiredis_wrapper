@@ -7,5 +7,6 @@
 #include "redis_others.hpp"
 #include "redis_string.hpp"
 #include "redis_list.hpp"
+#include "redis_hash.hpp"
 
 #endif

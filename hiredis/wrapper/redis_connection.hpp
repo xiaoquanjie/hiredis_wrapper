@@ -156,6 +156,47 @@ public:
 	inline bool rpoplpush(const char*key1, const char*key2, T& value);
 	inline bool rpoplpush(const char*key1, const char*key2, std::string& value);
 
+	// 返回1表示新设，返回0表示更新
+	template<typename T>
+	inline int hset(const char* key, const char* field, const T& value);
+	inline int hset(const char* key, const char* field, const std::string& value);
+	inline int hset(const char* key, const char* field, const char* value, unsigned int len);
+	template<int N>
+	inline int hset(const char* key, const char* field, const char(&value)[N]);
+
+	template<typename T>
+	inline void hget(const char* key, const char* field, T& value);
+	inline void hget(const char* key, const char* field, std::string& value);
+	inline void hget(const char* key, const char* field, char* value, unsigned int len);
+
+	template<typename T1,typename T2>
+	inline void hgetall(const char* key, std::map<T1, T2>& values);
+	inline void hgetall(const char* key, std::map<std::string, std::string>& values);
+	template<typename T>
+	inline void hgetall(const char* key, std::map<T, std::string>& values);
+	template<typename T>
+	inline void hgetall(const char* key, std::map<std::string, T>& values);
+
+	// 如果key已存在，则设置失败
+	template<typename T>
+	inline bool hsetnx(const char* key, const char* field, const T& value);
+	inline bool hsetnx(const char* key, const char* field, const std::string& value);
+	inline bool hsetnx(const char* key, const char* field, const char* value, unsigned int len);
+	template<int N>
+	inline bool hsetnx(const char* key, const char* field, const char(&value)[N]);
+
+	template<typename T1, typename T2>
+	inline void hmset(const char* key, const std::map<T1, T2>& values);
+	inline void hmset(const char* key, const std::map<std::string, std::string>& values);
+	template<typename T>
+	inline void hmset(const char* key, const std::map<T, std::string>& values);
+	template<typename T>
+	inline void hmset(const char* key, const std::map<std::string, T>& values);
+
+	// values是in-out值
+	template<typename T1, typename T2>
+	inline void hmget(const char* key, std::vector<TriangleValule<T1, T2> >&values);
+
 private:
 	redisContext* _context;
 };
