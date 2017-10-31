@@ -8,5 +8,6 @@
 #include "redis_string.hpp"
 #include "redis_list.hpp"
 #include "redis_hash.hpp"
+#include "redis_set.hpp"
 
 #endif

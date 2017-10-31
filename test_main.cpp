@@ -343,6 +343,6 @@ int main()
 	//ltrim_cmd();
 	//linsert_cmd();
 	//rpoplpush_cmd();
-	hash_cmd();
+	//hash_cmd();
 	return 0;
 }

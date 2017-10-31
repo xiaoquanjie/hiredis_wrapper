@@ -217,6 +217,15 @@ public:
 	template<typename T>
 	void hvals(const char*key, T& values, std::string);
 
+	// 返回成功插入的个数
+	template<typename T>
+	int sadd(const char*key, const T& value);
+	int sadd(const char*key, const std::string&value);
+	template<typename T>
+	int sadd(const char*key, const T& values, typename T::value_type);
+	template<typename T>
+	int sadd(const char*key, const T& values, std::string);
+
 private:
 	redisContext* _context;
 };

@@ -161,6 +161,7 @@
     <ClInclude Include="hiredis\wrapper\redis_hash.hpp" />
     <ClInclude Include="hiredis\wrapper\redis_list.hpp" />
     <ClInclude Include="hiredis\wrapper\redis_others.hpp" />
+    <ClInclude Include="hiredis\wrapper\redis_set.hpp" />
     <ClInclude Include="hiredis\wrapper\redis_string.hpp" />
     <ClInclude Include="hiredis\wrapper\redis_connection.hpp" />
     <ClInclude Include="hiredis\wrapper\redis_pool.hpp" />
