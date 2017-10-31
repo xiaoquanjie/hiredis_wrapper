@@ -197,6 +197,26 @@ public:
 	template<typename T1, typename T2>
 	inline void hmget(const char* key, std::vector<TriangleValule<T1, T2> >&values);
 
+	template<typename T>
+	inline void hincrby(const char* key, const char* field, int step, T& new_value);
+	inline void hincrby(const char* key, const char* field, int step);
+
+	bool hexists(const char* key, const char*field);
+	int  hlen(const char* key);
+	bool hdel(const char* key, const char*field);
+
+	// T要求是一个容器
+	template<typename T>
+	void hkeys(const char*key, T& values, typename T::value_type);
+	template<typename T>
+	void hkeys(const char*key, T& values, std::string);
+
+	// T要求是一个容器
+	template<typename T>
+	void hvals(const char*key, T& values, typename T::value_type);
+	template<typename T>
+	void hvals(const char*key, T& values, std::string);
+
 private:
 	redisContext* _context;
 };

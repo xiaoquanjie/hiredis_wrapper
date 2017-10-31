@@ -12,6 +12,14 @@ void print_container(const T& t) {
 	}
 	cout << endl;
 }
+template<typename T>
+void print_container2(const T& t) {
+	for (typename T::const_iterator iter = t.begin(); iter != t.end(); ++iter)
+	{
+		cout << iter->first << " " << iter->second << endl;
+	}
+	cout << endl;
+}
 
 void set_cmd()
 {
@@ -222,6 +230,101 @@ void rpoplpush_cmd() {
 	}
 }
 
+void hash_cmd() {
+	try {
+		RedisConnection conn = RedisPool::GetConnection("127.0.0.1", 6379);
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hset²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			cout << conn.hset("myhash", "name", "1234") << endl;;
+			cout << conn.hset("myhash", "score", 1) << endl;
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hget²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			int score = 0;
+			std::string name;
+			conn.hget("myhash", "name", name);
+			conn.hget("myhash", "score", score);
+			cout << name << " " << score << endl;
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hgetall²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			std::map<std::string, std::string> mymap;
+			std::map<std::string, int> mymap2;
+			conn.hgetall("myhash", mymap);
+			conn.hgetall("myhash", mymap2);
+			print_container2(mymap);
+			print_container2(mymap2);
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hsetnx²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			cout << conn.hsetnx("myhash", "name", "12345") << endl;
+			cout << conn.hsetnx("myhash", "weight", "123.45") << endl;
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hmset²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			std::map<int, int> map1;
+			map1[1] = 1;
+			map1[2] = 2;
+			std::map<std::string, std::string> map2;
+			map2["jie"] = 3;
+			map2["quan"] = 4;
+			conn.hmset("myhash", map1);
+			conn.hmset("myhash", map2);
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hmget²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			std::vector<TriangleValule<std::string, std::string> > values;
+			TriangleValule<std::string, std::string> tv;
+			tv._key = "name";
+			values.push_back(tv);
+			tv._key = "enen";
+			values.push_back(tv);
+			conn.hmget("myhash", values);
+			for (std::vector<TriangleValule<std::string, std::string> >::iterator iter=values.begin();
+				iter!=values.end();++iter)
+			{
+				cout << iter->Key() << " " << iter->_valid << " " << iter->_value << endl;
+			}
+		}*/
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hincrby²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			int value = 0;
+			conn.hincrby("myhash", "score", value);
+			cout << value << endl;
+		}
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hexists²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			cout << conn.hexists("myhash", "score") << endl;
+			cout << conn.hexists("myhash", "score2") << endl;
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hlen²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			cout << conn.hlen("myhash") << endl;
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hdel²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			cout << conn.hdel("myhash", "quan") << endl;
+			cout << conn.hdel("myhash", "quan2") << endl;
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hkeys²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			std::vector<std::string> vec;
+			conn.hkeys("myhash", vec, std::string());
+			print_container(vec);
+		}*/
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hvals²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			std::vector<int> vec;
+			conn.hvals("myhash", vec, int(1));
+			print_container(vec);
+		}
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~end²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
+	catch (RedisException&e) {
+		cout << e.What() << endl;
+	}
+}
+
 int main()
 {
 	//set_cmd();
@@ -239,6 +342,7 @@ int main()
 	//lrem_cmd();
 	//ltrim_cmd();
 	//linsert_cmd();
-	rpoplpush_cmd();
+	//rpoplpush_cmd();
+	hash_cmd();
 	return 0;
 }
