@@ -643,7 +643,13 @@ bool RedisConnection::hdel(const char* key, const char*field)
 
 	return ret;
 }
-
+template<typename T>
+bool RedisConnection::hdel(const char*key, const T& field)
+{
+	std::ostringstream oss;
+	oss << field;
+	return hdel(key, oss.str().c_str());
+}
 
 template<typename T>
 void RedisConnection::hkeys(const char*key, T& values, typename T::value_type)

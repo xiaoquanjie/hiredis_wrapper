@@ -204,6 +204,8 @@ public:
 	bool hexists(const char* key, const char*field);
 	int  hlen(const char* key);
 	bool hdel(const char* key, const char*field);
+	template<typename T>
+	bool hdel(const char*key, const T& field);
 
 	// T要求是一个容器
 	template<typename T>
@@ -225,6 +227,21 @@ public:
 	int sadd(const char*key, const T& values, typename T::value_type);
 	template<typename T>
 	int sadd(const char*key, const T& values, std::string);
+
+	// T要求是一个容器
+	template<typename T>
+	void smembers(const char*key, T&values, typename T::value_type);
+	template<typename T>
+	void smembers(const char*key, T&values, std::string);
+
+	template<typename T>
+	bool spop(const char*key, T&value);
+	bool spop(const char*key, std::string&value);
+	bool spop(const char*key, char*value, unsigned int len);
+
+	template<typename T>
+	bool srem(const char*key, const T& field);
+	bool srem(const char*key, const char* field);
 
 private:
 	redisContext* _context;
