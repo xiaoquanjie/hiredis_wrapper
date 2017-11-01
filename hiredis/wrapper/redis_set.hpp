@@ -304,4 +304,63 @@ bool RedisConnection::srem(const char*key, const char* field)
 	return ret;
 }
 
+
+int RedisConnection::scard(const char*key)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+
+	redisReply* reply = (redisReply*)redisCommand(_context, "SCARD %s", key);
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	int len = 0;
+	RedisException error;
+	do 
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_INTEGER) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+			break;
+		}
+		len = reply->integer;
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+
+	return len;
+}
+bool RedisConnection::sismember(const char*key, const char* field)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	redisReply* reply = (redisReply*)redisCommand(_context, "SISMEMBER %s",key);
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	bool ret = false;
+	RedisException error;
+	do 
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_INTEGER) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+			break;
+		}
+		ret = (bool)reply->integer;
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+
+	return ret;
+}
+
 #endif

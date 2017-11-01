@@ -243,6 +243,9 @@ public:
 	bool srem(const char*key, const T& field);
 	bool srem(const char*key, const char* field);
 
+	int scard(const char*key);
+	bool sismember(const char*key, const char* field);
+
 private:
 	redisContext* _context;
 };
