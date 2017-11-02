@@ -291,6 +291,7 @@ void hash_cmd() {
 			int value = 0;
 			conn.hincrby("myhash", "score", value);
 			cout << value << endl;
+			
 		}
 		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hexists²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{

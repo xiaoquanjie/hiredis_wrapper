@@ -391,6 +391,7 @@ bool RedisConnection::somve(const char* src_key, const char* dst_key)
 	return ret;
 }
 
+
 template<typename T>
 bool RedisConnection::srandmember(const char*key, T&value)
 {
@@ -509,6 +510,302 @@ void RedisConnection::srandmember(const char*key, T&values, int count, std::stri
 	freeReplyObject(reply);
 	if (!error.Empty())
 		throw error;
+}
+
+template<typename T>
+void RedisConnection::sdiff(const char* key, const std::vector<std::string>& other_keys, T& values, typename T::value_type*)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	std::string k = "SDIFF " + std::string(key) + " ";
+	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
+		k += *iter + " ";
+	}
+	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	RedisException error;
+	do 
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_ARRAY) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+		}
+		for (size_t idx = 0; idx < reply->elements; ++idx) {
+			std::istringstream iss(std::string(reply->element[idx]->str, reply->element[idx]->len));
+			typename T::value_type v;
+			iss >> v;
+			values.push_back(v);
+		}
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+}
+template<typename T>
+void RedisConnection::sdiff(const char* key, const std::vector<std::string>& other_keys, T& values, std::string*)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	std::string k = "SDIFF " + std::string(key) + " ";
+	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
+		k += *iter + " ";
+	}
+	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	RedisException error;
+	do
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_ARRAY) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+		}
+		for (size_t idx = 0; idx < reply->elements; ++idx) {
+			std::string v(reply->element[idx]->str, reply->element[idx]->len);
+			values.push_back(v);
+		}
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+}
+
+
+template<typename T>
+void RedisConnection::sunion(const char* key, const std::vector<std::string>& other_keys, T& values, typename T::value_type*)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	std::string k = "SUNION " + std::string(key) + " ";
+	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
+		k += *iter + " ";
+	}
+	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	RedisException error;
+	do
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_ARRAY) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+		}
+		for (size_t idx = 0; idx < reply->elements; ++idx) {
+			std::istringstream iss(std::string(reply->element[idx]->str, reply->element[idx]->len));
+			typename T::value_type v;
+			iss >> v;
+			values.push_back(v);
+		}
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+}
+template<typename T>
+void RedisConnection::sunion(const char* key, const std::vector<std::string>& other_keys, T& values, std::string*)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	std::string k = "SUNION " + std::string(key) + " ";
+	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
+		k += *iter + " ";
+	}
+	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	RedisException error;
+	do
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_ARRAY) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+		}
+		for (size_t idx = 0; idx < reply->elements; ++idx) {
+			values.push_back(std::string(reply->element[idx]->str, reply->element[idx]->len));
+		}
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+}
+
+
+template<typename T>
+void RedisConnection::sinter(const char* key, const std::vector<std::string>& other_keys, T& values, typename T::value_type*)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	std::string k = "SINTER " + std::string(key) + " ";
+	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
+		k += *iter + " ";
+	}
+	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	RedisException error;
+	do
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_ARRAY) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+		}
+		for (size_t idx = 0; idx < reply->elements; ++idx) {
+			std::istringstream iss(std::string(reply->element[idx]->str, reply->element[idx]->len));
+			typename T::value_type v;
+			iss >> v;
+			values.push_back(v);
+		}
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+}
+template<typename T>
+void RedisConnection::sinter(const char* key, const std::vector<std::string>& other_keys, T& values, std::string*)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	std::string k = "SINTER " + std::string(key) + " ";
+	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
+		k += *iter + " ";
+	}
+	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	RedisException error;
+	do
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_ARRAY) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+		}
+		for (size_t idx = 0; idx < reply->elements; ++idx) {
+			values.push_back(std::string(reply->element[idx]->str, reply->element[idx]->len));
+		}
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+}
+
+
+int RedisConnection::sdiffstore(const char* key, const std::vector<std::string>& other_keys)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	std::string k = "SDIFFSTORE " + std::string(key) + " ";
+	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
+		k += *iter + " ";
+	}
+	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	int ret = 0;
+	RedisException error;
+	do
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_INTEGER) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+		}
+		ret = reply->integer;
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+
+	return ret;
+}
+int RedisConnection::sunionstore(const char* key, const std::vector<std::string>& other_keys)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	std::string k = "SUNIONSTORE " + std::string(key) + " ";
+	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
+		k += *iter + " ";
+	}
+	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	int ret = 0;
+	RedisException error;
+	do
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_INTEGER) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+		}
+		ret = reply->integer;
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+
+	return ret;
+}
+int RedisConnection::sinterstore(const char* key, const std::vector<std::string>& other_keys)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	std::string k = "SINTERSTORE " + std::string(key) + " ";
+	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
+		k += *iter + " ";
+	}
+	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	int ret = 0;
+	RedisException error;
+	do
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_INTEGER) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+		}
+		ret = reply->integer;
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+
+	return ret;
 }
 
 #endif

@@ -256,7 +256,25 @@ public:
 	template<typename T>
 	void srandmember(const char*key, T&values, int count, std::string*);
 
-	
+	template<typename T>
+	void sdiff(const char* key, const std::vector<std::string>& other_keys, T& values, typename T::value_type*);
+	template<typename T>
+	void sdiff(const char* key, const std::vector<std::string>& other_keys, T& values, std::string*);
+
+	template<typename T>
+	void sunion(const char* key, const std::vector<std::string>& other_keys, T& values, typename T::value_type*);
+	template<typename T>
+	void sunion(const char* key, const std::vector<std::string>& other_keys, T& values, std::string*);
+
+	template<typename T>
+	void sinter(const char* key, const std::vector<std::string>& other_keys, T& values, typename T::value_type*);
+	template<typename T>
+	void sinter(const char* key, const std::vector<std::string>& other_keys, T& values, std::string*);
+
+	int sdiffstore(const char* key, const std::vector<std::string>& other_keys);
+	int sunionstore(const char* key, const std::vector<std::string>& other_keys);
+	int sinterstore(const char* key, const std::vector<std::string>& other_keys);
+
 
 private:
 	redisContext* _context;
