@@ -652,7 +652,7 @@ bool RedisConnection::hdel(const char*key, const T& field)
 }
 
 template<typename T>
-void RedisConnection::hkeys(const char*key, T& values, typename T::value_type)
+void RedisConnection::hkeys(const char*key, T& values, typename T::value_type*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -685,7 +685,7 @@ void RedisConnection::hkeys(const char*key, T& values, typename T::value_type)
 		throw error;
 }
 template<typename T>
-void RedisConnection::hkeys(const char*key, T& values, std::string)
+void RedisConnection::hkeys(const char*key, T& values, std::string*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -717,7 +717,7 @@ void RedisConnection::hkeys(const char*key, T& values, std::string)
 
 
 template<typename T>
-void RedisConnection::hvals(const char*key, T& values, typename T::value_type)
+void RedisConnection::hvals(const char*key, T& values, typename T::value_type*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -750,7 +750,7 @@ void RedisConnection::hvals(const char*key, T& values, typename T::value_type)
 		throw error;
 }
 template<typename T>
-void RedisConnection::hvals(const char*key, T& values, std::string)
+void RedisConnection::hvals(const char*key, T& values, std::string*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 

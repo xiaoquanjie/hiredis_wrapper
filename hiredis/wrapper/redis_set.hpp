@@ -39,7 +39,7 @@ int RedisConnection::sadd(const char*key, const std::string&value)
 	return len;
 }
 template<typename T>
-int RedisConnection::sadd(const char*key, const T& values, typename T::value_type)
+int RedisConnection::sadd(const char*key, const T& values, typename T::value_type*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -77,7 +77,7 @@ int RedisConnection::sadd(const char*key, const T& values, typename T::value_typ
 	return len;
 }
 template<typename T>
-int RedisConnection::sadd(const char*key, const T& values, std::string)
+int RedisConnection::sadd(const char*key, const T& values, std::string*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -115,7 +115,7 @@ int RedisConnection::sadd(const char*key, const T& values, std::string)
 
 // T要求是一个容器
 template<typename T>
-void RedisConnection::smembers(const char*key, T&values, typename T::value_type)
+void RedisConnection::smembers(const char*key, T&values, typename T::value_type*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -147,7 +147,7 @@ void RedisConnection::smembers(const char*key, T&values, typename T::value_type)
 		throw error;
 }
 template<typename T>
-void RedisConnection::smembers(const char*key, T&values, std::string)
+void RedisConnection::smembers(const char*key, T&values, std::string*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -361,6 +361,154 @@ bool RedisConnection::sismember(const char*key, const char* field)
 		throw error;
 
 	return ret;
+}
+bool RedisConnection::somve(const char* src_key, const char* dst_key)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	redisReply* reply = (redisReply*)redisCommand(_context, "SMOVE %s %s", src_key,dst_key);
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	bool ret = false;
+	RedisException error;
+	do
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_INTEGER) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+			break;
+		}
+		ret = (bool)reply->integer;
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+
+	return ret;
+}
+
+template<typename T>
+bool RedisConnection::srandmember(const char*key, T&value)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	redisReply* reply = (redisReply*)redisCommand(_context, "SRANDMEMBER %s", key);
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	bool ret = false;
+	RedisException error;
+	do 
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type == REDIS_REPLY_NIL) {
+			break;
+		}
+		std::istringstream iss(std::string(reply->str, reply->len));
+		iss >> value;
+		ret = true;
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+
+	return ret;
+}
+bool RedisConnection::srandmember(const char*key, std::string&value)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	redisReply* reply = (redisReply*)redisCommand(_context, "SRANDMEMBER %s", key);
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	bool ret = false;
+	RedisException error;
+	do
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type == REDIS_REPLY_NIL) {
+			break;
+		}
+		value.clear();
+		value.append(reply->str, reply->len);
+		ret = true;
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+
+	return ret;
+}
+template<typename T>
+void RedisConnection::srandmember(const char*key, T&values, int count, typename T::value_type*)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	redisReply* reply = (redisReply*)redisCommand(_context, "SRANDMEMBER %s %d", key,count);
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	RedisException error;
+	do
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_ARRAY) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+			break;
+		}
+		for (size_t idx = 0; idx < reply->elements; ++idx) {
+			std::istringstream iss(std::string(reply->element[idx]->str , reply->element[idx]->len));
+			typename T::value_type v;
+			iss >> v;
+			values.push_back(v);
+		}
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+}
+template<typename T>
+void RedisConnection::srandmember(const char*key, T&values, int count, std::string*)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	redisReply* reply = (redisReply*)redisCommand(_context, "SRANDMEMBER %s %d", key, count);
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	RedisException error;
+	do
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_ARRAY) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+			break;
+		}
+		for (size_t idx = 0; idx < reply->elements; ++idx) {
+			std::string v(reply->element[idx]->str, reply->element[idx]->len);
+			values.push_back(v);
+		}
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
 }
 
 #endif

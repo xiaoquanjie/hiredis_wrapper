@@ -209,30 +209,30 @@ public:
 
 	// T要求是一个容器
 	template<typename T>
-	void hkeys(const char*key, T& values, typename T::value_type);
+	void hkeys(const char*key, T& values, typename T::value_type*);
 	template<typename T>
-	void hkeys(const char*key, T& values, std::string);
+	void hkeys(const char*key, T& values, std::string*);
 
 	// T要求是一个容器
 	template<typename T>
-	void hvals(const char*key, T& values, typename T::value_type);
+	void hvals(const char*key, T& values, typename T::value_type*);
 	template<typename T>
-	void hvals(const char*key, T& values, std::string);
+	void hvals(const char*key, T& values, std::string*);
 
 	// 返回成功插入的个数
 	template<typename T>
 	int sadd(const char*key, const T& value);
 	int sadd(const char*key, const std::string&value);
 	template<typename T>
-	int sadd(const char*key, const T& values, typename T::value_type);
+	int sadd(const char*key, const T& values, typename T::value_type*);
 	template<typename T>
-	int sadd(const char*key, const T& values, std::string);
+	int sadd(const char*key, const T& values, std::string*);
 
 	// T要求是一个容器
 	template<typename T>
-	void smembers(const char*key, T&values, typename T::value_type);
+	void smembers(const char*key, T&values, typename T::value_type*);
 	template<typename T>
-	void smembers(const char*key, T&values, std::string);
+	void smembers(const char*key, T&values, std::string*);
 
 	template<typename T>
 	bool spop(const char*key, T&value);
@@ -245,6 +245,18 @@ public:
 
 	int scard(const char*key);
 	bool sismember(const char*key, const char* field);
+	bool somve(const char* src_key, const char* dst_key);
+
+	template<typename T>
+	bool srandmember(const char*key, T&value);
+	bool srandmember(const char*key, std::string&value);
+	// T要求是一个容器
+	template<typename T>
+	void srandmember(const char*key, T&values, int count, typename T::value_type*);
+	template<typename T>
+	void srandmember(const char*key, T&values, int count, std::string*);
+
+	
 
 private:
 	redisContext* _context;

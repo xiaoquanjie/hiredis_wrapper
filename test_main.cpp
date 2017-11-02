@@ -315,7 +315,7 @@ void hash_cmd() {
 		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hvals²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
 			std::vector<int> vec;
-			conn.hvals("myhash", vec, int(1));
+			conn.hvals("myhash", vec, (int*)0);
 			print_container(vec);
 		}
 		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~end²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
