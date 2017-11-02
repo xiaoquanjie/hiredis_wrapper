@@ -362,6 +362,13 @@ bool RedisConnection::sismember(const char*key, const char* field)
 
 	return ret;
 }
+template<typename T>
+bool RedisConnection::sismember(const char*key, const T& field)
+{
+	std::ostringstream oss;
+	oss << field;
+	return sismember(key, oss.str());
+}
 bool RedisConnection::somve(const char* src_key, const char* dst_key)
 {
 	M_CHECK_REDIS_CONTEXT(_context);

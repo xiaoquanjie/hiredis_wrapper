@@ -32,7 +32,6 @@ void set_cmd()
 		cout << e.What() << endl;
 	}
 }
-
 void setbit_cmd()
 {
 	try
@@ -44,7 +43,6 @@ void setbit_cmd()
 		cout << e.What() << endl;
 	}
 }
-
 void getbit_cmd()
 {
 	try
@@ -56,7 +54,6 @@ void getbit_cmd()
 		cout << e.What() << endl;
 	}
 }
-
 void del_cmd() {
 	try {
 		RedisConnection conn = RedisPool::GetConnection("127.0.0.1", 6379);
@@ -69,7 +66,6 @@ void del_cmd() {
 		cout << e.What() << endl;
 	}
 }
-
 void lpush_cmd() {
 	try {
 		RedisConnection conn = RedisPool::GetConnection("127.0.0.1", 6379);
@@ -83,7 +79,6 @@ void lpush_cmd() {
 		cout << e.What() << endl;
 	}
 }
-
 void lrange_cmd() {
 	try {
 		RedisConnection conn = RedisPool::GetConnection("127.0.0.1", 6379);
@@ -99,7 +94,6 @@ void lrange_cmd() {
 		cout << e.What() << endl;
 	}
 }
-
 void lpop_cmd() {
 	try {
 		RedisConnection conn = RedisPool::GetConnection("127.0.0.1", 6379);
@@ -113,7 +107,6 @@ void lpop_cmd() {
 		cout << e.What() << endl;
 	}
 }
-
 void llen_cmd() {
 	try {
 		RedisConnection conn = RedisPool::GetConnection("127.0.0.1", 6379);
@@ -322,6 +315,70 @@ void hash_cmd() {
 		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~end²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 	}
 	catch (RedisException&e) {
+		cout << e.What() << endl;
+	}
+}
+
+void set_cmd() {
+	try
+	{
+		const char* key = "myset";
+		RedisConnection conn = RedisPool::GetConnection("127.0.0.1", 6379);
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sadd²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			cout << conn.sadd(key,1) << endl;
+			cout << conn.sadd(key, "2") << endl;
+			cout << conn.sadd(key, std::string("3")) << endl;
+
+			std::vector<int> int_vec;
+			int_vec.push_back(4);
+			int_vec.push_back(5);
+			cout << conn.sadd(key, int_vec,(int*)0) << endl;
+
+			std::vector<string> int_vec2;
+			int_vec2.push_back("6");
+			int_vec2.push_back("7");
+			cout << conn.sadd(key, int_vec2, (string*)0) << endl;
+		}
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~smembers²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			std::vector<int> int_vec;
+			std::vector<string> int_vec2;
+			conn.smembers(key, int_vec, (int*)0);
+			conn.smembers(key, int_vec2, (string*)0);
+			print_container(int_vec);
+			print_container(int_vec2);
+		}
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~spop²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			int v1 = 0;
+			std::string v2;
+			cout << conn.spop(key, v1) << endl;
+			cout << conn.spop(key, v2) << endl;
+			cout << v1 << " " << v2 << endl;
+			cout << conn.spop("enen", v1) << endl;
+		}
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~srem²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			cout << conn.srem(key, 1) << endl;
+			cout << conn.srem(key, 100) << endl;
+		}
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~scard²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			cout << conn.scard(key) << endl;
+			cout << conn.scard("enen2") << endl;
+		}
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sismember²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			cout << conn.sismember(key, 2) << endl;
+			cout << conn.sismember(key, "xiao") << endl;
+		}
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sismember²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+
+		}
+	}
+	catch (RedisException& e) {
 		cout << e.What() << endl;
 	}
 }

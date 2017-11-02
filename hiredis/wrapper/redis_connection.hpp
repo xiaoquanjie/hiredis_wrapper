@@ -245,6 +245,8 @@ public:
 
 	int scard(const char*key);
 	bool sismember(const char*key, const char* field);
+	template<typename T>
+	bool sismember(const char*key, const T& field);
 	bool somve(const char* src_key, const char* dst_key);
 
 	template<typename T>
