@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="test_main.cpp" />
+    <ClCompile Include="test_main2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hiredis\adapters\ae.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="hiredis\hiredis.h" />
     <ClInclude Include="hiredis\read.h" />
     <ClInclude Include="hiredis\sds.h" />
+    <ClInclude Include="hiredis\wrapper\convert.hpp" />
     <ClInclude Include="hiredis\wrapper\redis_hash.hpp" />
     <ClInclude Include="hiredis\wrapper\redis_list.hpp" />
     <ClInclude Include="hiredis\wrapper\redis_others.hpp" />

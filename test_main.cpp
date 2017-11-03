@@ -319,12 +319,12 @@ void hash_cmd() {
 	}
 }
 
-void set_cmd() {
+void set_command() {
 	try
 	{
 		const char* key = "myset";
 		RedisConnection conn = RedisPool::GetConnection("127.0.0.1", 6379);
-		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sadd²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sadd²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
 			cout << conn.sadd(key,1) << endl;
 			cout << conn.sadd(key, "2") << endl;
@@ -339,8 +339,8 @@ void set_cmd() {
 			int_vec2.push_back("6");
 			int_vec2.push_back("7");
 			cout << conn.sadd(key, int_vec2, (string*)0) << endl;
-		}
-		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~smembers²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~smembers²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
 			std::vector<int> int_vec;
 			std::vector<string> int_vec2;
@@ -348,8 +348,8 @@ void set_cmd() {
 			conn.smembers(key, int_vec2, (string*)0);
 			print_container(int_vec);
 			print_container(int_vec2);
-		}
-		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~spop²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~spop²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
 			int v1 = 0;
 			std::string v2;
@@ -357,22 +357,22 @@ void set_cmd() {
 			cout << conn.spop(key, v2) << endl;
 			cout << v1 << " " << v2 << endl;
 			cout << conn.spop("enen", v1) << endl;
-		}
-		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~srem²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~srem²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
 			cout << conn.srem(key, 1) << endl;
 			cout << conn.srem(key, 100) << endl;
-		}
-		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~scard²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~scard²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
 			cout << conn.scard(key) << endl;
 			cout << conn.scard("enen2") << endl;
-		}
-		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sismember²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sismember²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
 			cout << conn.sismember(key, 2) << endl;
 			cout << conn.sismember(key, "xiao") << endl;
-		}
+		}*/
 		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sismember²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
 
@@ -402,5 +402,6 @@ int main()
 	//linsert_cmd();
 	//rpoplpush_cmd();
 	//hash_cmd();
+	set_command();
 	return 0;
 }

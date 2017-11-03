@@ -43,12 +43,12 @@ int RedisConnection::sadd(const char*key, const T& values, typename T::value_typ
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
-	std::string k = "SADD %s " + std::string(key);
+	std::string k = "SADD " + std::string(key);
 	for (typename T::const_iterator iter = values.begin();
 		iter != values.end(); ++iter) {
 		std::ostringstream oss;
 		oss << *iter;
-		k += oss.str() + " ";
+		k += " " + oss.str() + " ";
 	}
 
 	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
@@ -81,10 +81,10 @@ int RedisConnection::sadd(const char*key, const T& values, std::string*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
-	std::string k = "SADD %s " + std::string(key);
+	std::string k = "SADD " + std::string(key);
 	for (typename T::const_iterator iter=values.begin();
 		iter!=values.end(); ++iter)
-		k += *iter + " ";
+		k += " " + *iter + " ";
 
 	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
 	if (!reply)
@@ -337,7 +337,7 @@ int RedisConnection::scard(const char*key)
 bool RedisConnection::sismember(const char*key, const char* field)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "SISMEMBER %s",key);
+	redisReply* reply = (redisReply*)redisCommand(_context, "SISMEMBER %s %s",key,field);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -367,7 +367,7 @@ bool RedisConnection::sismember(const char*key, const T& field)
 {
 	std::ostringstream oss;
 	oss << field;
-	return sismember(key, oss.str());
+	return sismember(key, oss.str().c_str());
 }
 bool RedisConnection::somve(const char* src_key, const char* dst_key)
 {
