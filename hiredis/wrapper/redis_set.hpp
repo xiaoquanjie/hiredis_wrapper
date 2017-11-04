@@ -369,10 +369,15 @@ bool RedisConnection::sismember(const char*key, const T& field)
 	oss << field;
 	return sismember(key, oss.str().c_str());
 }
-bool RedisConnection::somve(const char* src_key, const char* dst_key)
+template<typename T>
+bool RedisConnection::smove(const char* src_key, const char* dst_key, const T& field)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "SMOVE %s %s", src_key,dst_key);
+	std::string k = "SMOVE " + std::string(src_key) + " " + std::string(dst_key);
+	std::ostringstream oss;
+	oss << field;
+	k += " " + oss.str();
+	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -397,7 +402,34 @@ bool RedisConnection::somve(const char* src_key, const char* dst_key)
 
 	return ret;
 }
+bool RedisConnection::smove(const char* src_key, const char* dst_key, const char* field)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	redisReply* reply = (redisReply*)redisCommand(_context, "SMOVE %s %s %s", src_key, dst_key,field);
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
+	bool ret = false;
+	RedisException error;
+	do
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_INTEGER) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+			break;
+		}
+		ret = (bool)reply->integer;
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+
+	return ret;
+}
 
 template<typename T>
 bool RedisConnection::srandmember(const char*key, T&value)

@@ -373,10 +373,82 @@ void set_command() {
 			cout << conn.sismember(key, 2) << endl;
 			cout << conn.sismember(key, "xiao") << endl;
 		}*/
-		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sismember²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~somve²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
+			cout << conn.smove("myset", "myset2", 2) << endl;
+			cout << conn.smove("myset", "myset2", (char*)"2") << endl;
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sdiff²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			std::vector<std::string> vec1;
+			vec1.push_back("myset2");
+			std::vector<int> int_vec;
+			std::vector<std::string> str_vec;
+			conn.sdiff(key, vec1, int_vec, (int*)0);
+			conn.sdiff(key, vec1, str_vec, (string*)0);
+			print_container(int_vec);
+			print_container(str_vec);
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sunion²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			std::vector<std::string> vec1;
+			vec1.push_back("myset2");
+			std::vector<int> int_vec;
+			std::vector<std::string> str_vec;
+			conn.sunion(key, vec1, int_vec, (int*)0);
+			conn.sunion(key, vec1, str_vec, (string*)0);
+			print_container(int_vec);
+			print_container(str_vec);
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~srandmember²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			int v1;
+			cout << conn.srandmember(key, v1) << endl;
+			string v2;
+			cout << conn.srandmember(key, v2) << endl;
 
-		}
+			std::vector<std::string> str_vec;
+			conn.srandmember(key, str_vec,2,(string*)0);
+			std::vector<int> int_vec;
+			conn.srandmember(key, int_vec,2,(int*)0);
+
+			cout << v1 << endl;
+			cout << v2 << endl;
+			print_container(str_vec);
+			print_container(int_vec);
+		}*/
+		/*	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sinter²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+			{
+				std::vector<std::string> vec1;
+				vec1.push_back("myset2");
+				std::vector<int> int_vec;
+				std::vector<std::string> str_vec;
+				conn.sinter(key, vec1, int_vec, (int*)0);
+				conn.sinter(key, vec1, str_vec, (string*)0);
+				print_container(int_vec);
+				print_container(str_vec);
+			}*/
+			/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sdiffstore²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+			{
+				std::vector<std::string> vec1;
+				vec1.push_back("myset2");
+				vec1.push_back("myset1");
+				cout << conn.sdiffstore("myset3", vec1) << endl;
+			}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sunionstore²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			std::vector<std::string> vec1;
+			vec1.push_back("myset2");
+			vec1.push_back("myset1");
+			cout << conn.sunionstore("myset4", vec1) << endl;
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sinterstore²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			std::vector<std::string> vec1;
+			vec1.push_back("myset2");
+			vec1.push_back("myset1");
+			cout << conn.sinterstore("myset5", vec1) << endl;
+		}*/
 	}
 	catch (RedisException& e) {
 		cout << e.What() << endl;

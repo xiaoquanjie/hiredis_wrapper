@@ -247,7 +247,9 @@ public:
 	bool sismember(const char*key, const char* field);
 	template<typename T>
 	bool sismember(const char*key, const T& field);
-	bool somve(const char* src_key, const char* dst_key);
+	template<typename T>
+	bool smove(const char* src_key, const char* dst_key,const T& field);
+	bool smove(const char* src_key, const char* dst_key, const char* field);
 
 	template<typename T>
 	bool srandmember(const char*key, T&value);
