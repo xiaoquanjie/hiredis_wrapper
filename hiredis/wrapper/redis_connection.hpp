@@ -279,6 +279,29 @@ public:
 	int sunionstore(const char* key, const std::vector<std::string>& other_keys);
 	int sinterstore(const char* key, const std::vector<std::string>& other_keys);
 
+	template<typename T1,typename T2>
+	int zadd(const char*key, const T1& score, const T2& member);
+	template<typename T>
+	int zadd(const char*key, const T& score, const std::string& member);
+
+	template<typename T>
+	void zrange(const char*key, int beg_idx, int end_idx, T& values, typename T::value_type*);
+	template<typename T>
+	void zrange(const char*key, int beg_idx, int end_idx, T& values, std::string*);
+
+	template<typename T1,typename T2,typename T3>
+	void zrangewithscores(const char* key, int beg_idx, int end_idx, T1& values,
+		std::pair<T2,T3>*);
+	template<typename T1, typename T2>
+	void zrangewithscores(const char* key, int beg_idx, int end_idx, std::map<T1, T2>& values);
+
+	template<typename T>
+	bool zrem(const char*key, const T& member);
+	bool zrem(const char*key, const std::string& member);
+	template<typename T>
+	int  zrem(const char*key, const T& members, typename T::value_type*);
+	template<typename T>
+	int  zrem(const char*key, const T& members, std::string*);
 
 private:
 	redisContext* _context;

@@ -9,5 +9,6 @@
 #include "redis_list.hpp"
 #include "redis_hash.hpp"
 #include "redis_set.hpp"
+#include "redis_sort_set.hpp"
 
 #endif
