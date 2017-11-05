@@ -303,6 +303,40 @@ public:
 	template<typename T>
 	int  zrem(const char*key, const T& members, std::string*);
 
+	template<typename T>
+	void zrevrange(const char*key, int beg_idx, int end_idx, T& values, typename T::value_type*);
+	template<typename T>
+	void zrevrange(const char*key, int beg_idx, int end_idx, T& values, std::string*);
+
+	template<typename T1, typename T2, typename T3>
+	void zrevrangewithscores(const char* key, int beg_idx, int end_idx, T1& values,
+		std::pair<T2, T3>*);
+	template<typename T1, typename T2>
+	void zrevrangewithscores(const char* key, int beg_idx, int end_idx, std::map<T1, T2>& values);
+
+	bool zrank(const char* key, const char* member, int& rank);
+	bool zrevrank(const char* key, const char* member, int& rank);
+
+	void zcard(const char* key, int& count);
+	template<typename T1,typename T2>
+	void zcount(const char* key, T1 min, T2 max, int& count);
+
+	template<typename T>
+	void zincrby(const char* key, const char* member, T incr, T& score);
+
+	template<typename T1,typename T2,typename T3>
+	void zrangebyscore(const char* key, T1 min, T2 max, T3& values, typename T3::value_type*);
+	template<typename T1, typename T2, typename T3>
+	void zrangebyscore(const char* key, T1 min, T2 max, T3& values, std::string*);
+
+	template<typename T1, typename T2, typename T3>
+	void zrevrangebyscore(const char* key, T1 min, T2 max, T3& values, typename T3::value_type*);
+	template<typename T1, typename T2, typename T3>
+	void zrevrangebyscore(const char* key, T1 min, T2 max, T3& values, std::string*);
+
+	template<typename T>
+	void zscore(const char* key, const char* member, T& score);
+
 private:
 	redisContext* _context;
 };
