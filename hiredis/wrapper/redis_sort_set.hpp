@@ -564,7 +564,7 @@ void RedisConnection::zincrby(const char* key, const char* member, T incr, T& sc
 	std::ostringstream oss;
 	oss << incr;
 
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZINCRBY %s %s %s", key, member, oss.str().c_str());
+	redisReply* reply = (redisReply*)redisCommand(_context, "ZINCRBY %s %s %s", key, oss.str().c_str(), member);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
