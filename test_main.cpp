@@ -73,7 +73,7 @@ void lpush_cmd() {
 		vec.push_back(100);
 		vec.push_back(102);
 		vec.push_back(103);
-		cout << conn.lpush("int_l", vec) << endl;
+		cout << conn.lpush("int_l", vec,(int*)0) << endl;
 	}
 	catch (RedisException&e) {
 		cout << e.What() << endl;
@@ -483,7 +483,7 @@ void zset_cmd() {
 			print_container(vec1);
 			print_container(vec2);
 		}*/
-		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zrangewithscores²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zrangewithscores²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
 			std::vector<std::pair<int, int> > vec;
 			std::map<string, int> m;
@@ -491,7 +491,7 @@ void zset_cmd() {
 			conn.zrangewithscores(key, 0, -1, vec, (std::pair<int, int>*) 0);
 			print_container2(m);
 			print_container2(vec);
-		}
+		}*/
 		/*	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zrem²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 			{
 				cout << conn.zrem(key, std::string("1996")) << endl;
@@ -517,20 +517,93 @@ void zset_cmd() {
 				print_container(vec1);
 				print_container(vec2);
 			}*/
-		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zrevrangewithscores²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+			/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zrevrangewithscores²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+			{
+				std::vector<std::pair<int, int> > vec;
+				std::map<string, int> m;
+				conn.zrangewithscores(key, 0, -1, m);
+				conn.zrangewithscores(key, 0, -1, vec, (std::pair<int, int>*) 0);
+				print_container2(m);
+				print_container2(vec);
+			}*/
+			/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zrank²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+			{
+				int rank = -1, rank2 = -1;
+				cout << conn.zrank(key, "1992",rank) << endl;
+				cout << conn.zrank(key, "fdsf", rank2) << endl;
+				cout << rank << " " << rank2 << endl;
+			}*/
+			/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zrevrank²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+			{
+				int rank = -1, rank2 = -1;
+				cout << conn.zrevrank(key, "1992", rank) << endl;
+				cout << conn.zrevrank(key, "fdsf", rank2) << endl;
+				cout << rank << " " << rank2 << endl;
+			}*/
+			/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zcard²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+			{
+				int count;
+				conn.zcard(key, count);
+				cout << count << endl;
+			}*/
+			/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zcount²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+			{
+				int count;
+				conn.zcount(key, 0, 100000, count);
+				cout << count << endl;
+			}*/
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zincrby²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
-			std::vector<std::pair<int, int> > vec;
-			std::map<string, int> m;
-			conn.zrangewithscores(key, 0, -1, m);
-			conn.zrangewithscores(key, 0, -1, vec, (std::pair<int, int>*) 0);
-			print_container2(m);
-			print_container2(vec);
+			int score = 0;
+			conn.zincrby(key, "1991", 1, score);
+			cout << score << endl;
 		}
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zscore²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			int score = 0;
+			conn.zscore(key, "1991", score);
+			cout << score << endl;
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zrangebyscore²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			std::vector<int> vec1;
+			std::vector<string> vec2;
+			conn.zrangebyscore(key, 0, 100, vec1, (int*)0);
+			conn.zrangebyscore(key, 0, 100, vec2, (string*)0);
+			print_container(vec1);
+			print_container(vec2);
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zrevrangebyscore²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			std::vector<int> vec1;
+			std::vector<string> vec2;
+			conn.zrevrangebyscore(key, 0, 100, vec1, (int*)0);
+			conn.zrevrangebyscore(key, 0, 100, vec2, (string*)0);
+			print_container(vec1);
+			print_container(vec2);
+		}*/
 	}
 	catch (RedisException&e) {
 		cout << e.What() << endl;
 	}
 
+}
+
+void other_cmd() {
+	try {
+		RedisConnection conn = RedisPool::GetConnection("127.0.0.1", 6379);
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~del²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			cout << conn.del("myhash") << endl;
+			vector<string> vec;
+			vec.push_back("myset2");
+			vec.push_back("myset3");
+			cout << conn.del(vec) << endl;
+		}
+	}
+	catch (RedisException&e) {
+		cout << e.What() << endl;
+	}
 }
 
 int main()
@@ -553,6 +626,8 @@ int main()
 	//rpoplpush_cmd();
 	//hash_cmd();
 	//set_command();
-	zset_cmd();
+	//zset_cmd();
+	//other_cmd();
+	lpush_cmd();
 	return 0;
 }

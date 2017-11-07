@@ -22,8 +22,8 @@ public:
 	inline bool expire(const char* key, time_t expire);
 	// 1为key存在，0表示key不存在
 	inline int del(const char* key);
-	inline int del(const std::vector<std::string>& keys);
-	inline int del(const std::list<std::string>& keys);
+	template<typename T>
+	int del(const T& keys);
 
 	template<typename T>
 	inline void set(const char* key, T value);
@@ -86,16 +86,11 @@ public:
 
 	template<typename T>
 	inline int lpush(const char* key, const T& value);
-	template<int N>
-	inline int lpush(const char* key, const char(&value)[N]);
 	inline int lpush(const char* key, const std::string& value);
-	inline int lpush(const char* key, const char* value, unsigned int len);
-	inline int lpush(const char* key, const std::vector<std::string>& values);
-	inline int lpush(const char* key, const std::list<std::string>& values);
 	template<typename T>
-	inline int lpush(const char* key, const std::vector<T>& values);
+	int lpush(const char* key, const T& values,typename T::value_type*);
 	template<typename T>
-	inline int lpush(const char* key, const std::list<T>& values);
+	int lpush(const char* key, const T& values, std::string*);
 
 	template<typename T>
 	inline void lrange(const char* key, int beg_idx, int end_idx, std::list<T>& values);

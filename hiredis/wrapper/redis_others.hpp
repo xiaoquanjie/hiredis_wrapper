@@ -44,52 +44,19 @@ inline int RedisConnection::del(const char* key)
 	vec.push_back(key);
 	return del(vec);
 }
-inline int RedisConnection::del(const std::vector<std::string>& keys)
+template<typename T>
+int RedisConnection::del(const T& keys)
 {
 	if (keys.empty())
 		return 0;
+
 	M_CHECK_REDIS_CONTEXT(_context);
 
 	std::string k = "DEL ";
-	for (std::vector<std::string>::const_iterator iter = keys.begin();
-		iter != keys.end(); ++iter)
+	for (typename T::const_iterator iter = keys.begin();
+		iter != keys.end(); ++iter) {
 		k += *iter + " ";
-
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
-	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
-
-	int size = 0;
-	RedisException error;
-	do 
-	{
-		if (reply->type == REDIS_REPLY_ERROR) {
-			error = RedisException(reply->str);
-			break;
-		}
-		if (reply->type != REDIS_REPLY_INTEGER) {
-			error = RedisException(M_ERR_NOT_DEFINED);
-			break;
-		}
-		size = reply->integer;
-	} while (false);
-
-	freeReplyObject(reply);
-	if (!error.Empty())
-		throw error;
-
-	return size;
-}
-inline int RedisConnection::del(const std::list<std::string>& keys)
-{
-	if (keys.empty())
-		return 0;
-	M_CHECK_REDIS_CONTEXT(_context);
-
-	std::string k = "DEL ";
-	for (std::list<std::string>::const_iterator iter = keys.begin();
-		iter != keys.end(); ++iter)
-		k += *iter + " ";
+	}
 
 	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
 	if (!reply)
