@@ -93,11 +93,9 @@ public:
 	int lpush(const char* key, const T& values, std::string*);
 
 	template<typename T>
-	inline void lrange(const char* key, int beg_idx, int end_idx, std::list<T>& values);
+	void lrange(const char* key, int beg_idx, int end_idx, T& values, typename T::value_type*);
 	template<typename T>
-	inline void lrange(const char* key, int beg_idx, int end_idx, std::vector<T>& values);
-	inline void lrange(const char* key, int beg_idx, int end_idx, std::list<std::string>& values);
-	inline void lrange(const char* key, int beg_idx, int end_idx, std::vector<std::string>& values);
+	void lrange(const char* key, int beg_idx, int end_idx, T& values, std::string*);
 
 	// 当元素不存在时返回False
 	template<typename T>
@@ -107,16 +105,11 @@ public:
 
 	template<typename T>
 	inline int rpush(const char* key, const T& value);
-	template<int N>
-	inline int rpush(const char* key, const char(&value)[N]);
 	inline int rpush(const char* key, const std::string& value);
-	inline int rpush(const char* key, const char* value, unsigned int len);
-	inline int rpush(const char* key, const std::vector<std::string>& values);
-	inline int rpush(const char* key, const std::list<std::string>& values);
 	template<typename T>
-	inline int rpush(const char* key, const std::vector<T>& values);
+	int rpush(const char* key, const T& values, typename T::value_type*);
 	template<typename T>
-	inline int rpush(const char* key, const std::list<T>& values);
+	int rpush(const char* key, const T& values, std::string*);
 
 	// 当元素不存在时返回False
 	template<typename T>

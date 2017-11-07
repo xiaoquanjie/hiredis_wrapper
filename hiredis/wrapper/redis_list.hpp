@@ -94,7 +94,7 @@ int RedisConnection::lpush(const char* key, const T& values, std::string*)
 
 
 template<typename T>
-inline void RedisConnection::lrange(const char* key, int beg_idx, int end_idx, std::list<T>& values)
+void RedisConnection::lrange(const char* key, int beg_idx, int end_idx, T& values, typename T::value_type*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -104,7 +104,7 @@ inline void RedisConnection::lrange(const char* key, int beg_idx, int end_idx, s
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
 	RedisException error;
-	do 
+	do
 	{
 		if (reply->type == REDIS_REPLY_ERROR) {
 			error = RedisException(reply->str);
@@ -114,14 +114,13 @@ inline void RedisConnection::lrange(const char* key, int beg_idx, int end_idx, s
 			error = RedisException(M_ERR_NOT_DEFINED);
 			break;
 		}
-		for (size_t idx=0; idx<reply->elements; ++idx){
+		for (size_t idx = 0; idx < reply->elements; ++idx) {
 			redisReply* ele = reply->element[idx];
 			std::istringstream iss(std::string(ele->str, ele->len));
-			T v;
+			typename T::value_type v;
 			iss >> v;
 			values.push_back(v);
 		}
-
 	} while (false);
 
 	freeReplyObject(reply);
@@ -129,41 +128,7 @@ inline void RedisConnection::lrange(const char* key, int beg_idx, int end_idx, s
 		throw error;
 }
 template<typename T>
-inline void RedisConnection::lrange(const char* key, int beg_idx, int end_idx, std::vector<T>& values)
-{
-	M_CHECK_REDIS_CONTEXT(_context);
-
-	std::string k = "LRANGE " + std::string(key) + " %d %d";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), beg_idx, end_idx);
-	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
-
-	RedisException error;
-	do
-	{
-		if (reply->type == REDIS_REPLY_ERROR) {
-			error = RedisException(reply->str);
-			break;
-		}
-		if (reply->type != REDIS_REPLY_ARRAY) {
-			error = RedisException(M_ERR_NOT_DEFINED);
-			break;
-		}
-		for (size_t idx = 0; idx < reply->elements; ++idx) {
-			redisReply* ele = reply->element[idx];
-			std::istringstream iss(std::string(ele->str, ele->len));
-			T v;
-			iss >> v;
-			values.push_back(v);
-		}
-
-	} while (false);
-
-	freeReplyObject(reply);
-	if (!error.Empty())
-		throw error;
-}
-inline void RedisConnection::lrange(const char* key, int beg_idx, int end_idx, std::list<std::string>& values)
+void RedisConnection::lrange(const char* key, int beg_idx, int end_idx, T& values, std::string*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 
@@ -187,44 +152,13 @@ inline void RedisConnection::lrange(const char* key, int beg_idx, int end_idx, s
 			redisReply* ele = reply->element[idx];
 			values.push_back(std::string(ele->str, ele->len));
 		}
-
 	} while (false);
 
 	freeReplyObject(reply);
 	if (!error.Empty())
 		throw error;
 }
-inline void RedisConnection::lrange(const char* key, int beg_idx, int end_idx, std::vector<std::string>& values)
-{
-	M_CHECK_REDIS_CONTEXT(_context);
 
-	std::string k = "LRANGE " + std::string(key) + " %d %d";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), beg_idx, end_idx);
-	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
-
-	RedisException error;
-	do
-	{
-		if (reply->type == REDIS_REPLY_ERROR) {
-			error = RedisException(reply->str);
-			break;
-		}
-		if (reply->type != REDIS_REPLY_ARRAY) {
-			error = RedisException(M_ERR_NOT_DEFINED);
-			break;
-		}
-		for (size_t idx = 0; idx < reply->elements; ++idx) {
-			redisReply* ele = reply->element[idx];
-			values.push_back(std::string(ele->str, ele->len));
-		}
-
-	} while (false);
-
-	freeReplyObject(reply);
-	if (!error.Empty())
-		throw error;
-}
 
 template<typename T>
 inline bool RedisConnection::lpop(const char* key, T& value)
@@ -318,29 +252,61 @@ inline int RedisConnection::rpush(const char* key, const T& value)
 	oss << value;
 	return rpush(key, oss.str());
 }
-template<int N>
-inline int RedisConnection::rpush(const char* key, const char(&value)[N])
-{
-	return rpush(key, std::string(value, N));
-}
 inline int RedisConnection::rpush(const char* key, const std::string& value)
 {
 	std::vector<std::string> vec;
 	vec.push_back(value);
-	return rpush(key, vec);
+	return rpush(key, vec, (std::string*)0);
 }
-inline int RedisConnection::rpush(const char* key, const char* value, unsigned int len)
-{
-	return rpush(key, std::string(value, len));
-}
-inline int RedisConnection::rpush(const char* key, const std::vector<std::string>& values)
+template<typename T>
+int RedisConnection::rpush(const char* key, const T& values, typename T::value_type*)
 {
 	if (values.empty())
 		return 0;
 	M_CHECK_REDIS_CONTEXT(_context);
 
 	std::string k = "RPUSH " + std::string(key) + " ";
-	for (std::vector<std::string>::const_iterator iter = values.begin();
+	for (typename T::const_iterator iter = values.begin();
+		iter != values.end(); ++iter) {
+		std::ostringstream oss;
+		oss << *iter;
+		k += oss.str() + " ";
+	}
+
+	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	int size = 0;
+	RedisException error;
+	do
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_INTEGER) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+			break;
+		}
+		size = reply->integer;
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+
+	return size;
+}
+template<typename T>
+int RedisConnection::rpush(const char* key, const T& values, std::string*)
+{
+	if (values.empty())
+		return 0;
+	M_CHECK_REDIS_CONTEXT(_context);
+
+	std::string k = "RPUSH " + std::string(key) + " ";
+	for (typename T::const_iterator iter = values.begin();
 		iter != values.end(); ++iter)
 		k += *iter + " ";
 
@@ -369,66 +335,7 @@ inline int RedisConnection::rpush(const char* key, const std::vector<std::string
 
 	return size;
 }
-inline int RedisConnection::rpush(const char* key, const std::list<std::string>& values)
-{
-	if (values.empty())
-		return 0;
-	M_CHECK_REDIS_CONTEXT(_context);
 
-	std::string k = "RPUSH " + std::string(key) + " ";
-	for (std::list<std::string>::const_iterator iter = values.begin();
-		iter != values.end(); ++iter)
-		k += *iter + " ";
-
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
-	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
-
-	int size = 0;
-	RedisException error;
-	do
-	{
-		if (reply->type == REDIS_REPLY_ERROR) {
-			error = RedisException(reply->str);
-			break;
-		}
-		if (reply->type != REDIS_REPLY_INTEGER) {
-			error = RedisException(M_ERR_NOT_DEFINED);
-			break;
-		}
-		size = reply->integer;
-	} while (false);
-
-	freeReplyObject(reply);
-	if (!error.Empty())
-		throw error;
-
-	return size;
-}
-template<typename T>
-inline int RedisConnection::rpush(const char* key, const std::vector<T>& values)
-{
-	std::list<std::string> lis;
-	for (typename std::vector<T>::const_iterator iter = values.begin();
-		iter != values.end(); ++iter) {
-		std::ostringstream oss;
-		oss << *iter;
-		lis.push_back(oss.str());
-	}
-	return rpush(key, lis);
-}
-template<typename T>
-inline int RedisConnection::rpush(const char* key, const std::list<T>& values)
-{
-	std::list<std::string> lis;
-	for (typename std::list<T>::const_iterator iter = values.begin();
-		iter != values.end(); ++iter) {
-		std::ostringstream oss;
-		oss << *iter;
-		lis.push_back(oss.str());
-	}
-	return rpush(key, lis);
-}
 
 template<typename T>
 inline bool RedisConnection::rpop(const char* key, T& value)
