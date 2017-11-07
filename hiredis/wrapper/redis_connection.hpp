@@ -283,6 +283,9 @@ public:
 	int zadd(const char*key, const T1& score, const T2& member);
 	template<typename T>
 	int zadd(const char*key, const T& score, const std::string& member);
+	// T要求是容易，且元素是pair结构
+	template<typename T>
+	int zadd(const char*key, const T& values);
 
 	template<typename T>
 	void zrange(const char*key, int beg_idx, int end_idx, T& values, typename T::value_type*);
@@ -293,7 +296,8 @@ public:
 	void zrangewithscores(const char* key, int beg_idx, int end_idx, T1& values,
 		std::pair<T2,T3>*);
 	template<typename T1, typename T2>
-	void zrangewithscores(const char* key, int beg_idx, int end_idx, std::map<T1, T2>& values);
+	void zrangewithscores(const char* key, int beg_idx, int end_idx,
+		std::map<T1, T2>& values);
 
 	template<typename T>
 	bool zrem(const char*key, const T& member);

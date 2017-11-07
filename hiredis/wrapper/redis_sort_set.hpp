@@ -40,6 +40,43 @@ int RedisConnection::zadd(const char*key, const T& score, const std::string& mem
 
 	return ret;
 }
+template<typename T>
+int RedisConnection::zadd(const char*key, const T& values)
+{
+	M_CHECK_REDIS_CONTEXT(_context);
+	std::string k = "ZADD " + std::string(key) + " ";
+	for (typename T::const_iterator iter = values.begin(); iter != values.end(); ++iter) {
+		std::ostringstream oss1;
+		std::ostringstream oss2;
+		oss1 << iter->first;
+		oss2 << iter->second;
+		k += oss2.str() + " " + oss1.str() + " ";
+	}
+	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	if (!reply)
+		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+
+	int ret = 0;
+	RedisException error;
+	do
+	{
+		if (reply->type == REDIS_REPLY_ERROR) {
+			error = RedisException(reply->str);
+			break;
+		}
+		if (reply->type != REDIS_REPLY_INTEGER) {
+			error = RedisException(M_ERR_NOT_DEFINED);
+			break;
+		}
+		ret = reply->integer;
+	} while (false);
+
+	freeReplyObject(reply);
+	if (!error.Empty())
+		throw error;
+
+	return ret;
+}
 
 template<typename T>
 void RedisConnection::zrange(const char*key, int beg_idx, int end_idx, T& values, typename T::value_type*)
@@ -117,18 +154,18 @@ void RedisConnection::zrangewithscores(const char* key, int beg_idx, int end_idx
 			error = RedisException(reply->str);
 			break;
 		}
-		if (reply->type == REDIS_REPLY_ARRAY) {
+		if (reply->type != REDIS_REPLY_ARRAY) {
 			error = RedisException(M_ERR_NOT_DEFINED);
 			break;
 		}
 		for (size_t idx = 0; idx < reply->elements; idx+=2) {
 			std::istringstream iss1(std::string(reply->element[idx]->str, reply->element[idx]->len));
 			std::istringstream iss2(std::string(reply->element[idx+1]->str, reply->element[idx+1]->len));
-			T3 member;
+			T2 member;
 			iss1 >> member;
-			T2 score;
+			T3 score;
 			iss2 >> score;
-			values.push_back(std::make_pair(score, member));
+			values.push_back(std::make_pair(member, score));
 		}
 	} while (false);
 
@@ -151,18 +188,18 @@ void RedisConnection::zrangewithscores(const char* key, int beg_idx, int end_idx
 			error = RedisException(reply->str);
 			break;
 		}
-		if (reply->type == REDIS_REPLY_ARRAY) {
+		if (reply->type != REDIS_REPLY_ARRAY) {
 			error = RedisException(M_ERR_NOT_DEFINED);
 			break;
 		}
 		for (size_t idx = 0; idx < reply->elements; idx += 2) {
 			std::istringstream iss1(std::string(reply->element[idx]->str, reply->element[idx]->len));
 			std::istringstream iss2(std::string(reply->element[idx + 1]->str, reply->element[idx + 1]->len));
-			T2 member;
+			T1 member;
 			iss1 >> member;
-			T1 score;
+			T2 score;
 			iss2 >> score;
-			values.insert(std::make_pair(score, member));
+			values.insert(std::make_pair(member, score));
 		}
 	} while (false);
 
@@ -358,11 +395,11 @@ void RedisConnection::zrevrangewithscores(const char* key, int beg_idx, int end_
 		for (size_t idx = 0; idx < reply->elements; idx += 2) {
 			std::istringstream iss1(std::string(reply->element[idx]->str, reply->element[idx]->len));
 			std::istringstream iss2(std::string(reply->element[idx + 1]->str, reply->element[idx + 1]->len));
-			T3 member;
+			T2 member;
 			iss1 >> member;
-			T2 score;
+			T3 score;
 			iss2 >> score;
-			values.push_back(std::make_pair(score, member));
+			values.push_back(std::make_pair(member,score));
 		}
 	} while (false);
 
@@ -392,11 +429,11 @@ void RedisConnection::zrevrangewithscores(const char* key, int beg_idx, int end_
 		for (size_t idx = 0; idx < reply->elements; idx += 2) {
 			std::istringstream iss1(std::string(reply->element[idx]->str, reply->element[idx]->len));
 			std::istringstream iss2(std::string(reply->element[idx + 1]->str, reply->element[idx + 1]->len));
-			T2 member;
+			T1 member;
 			iss1 >> member;
-			T1 score;
+			T2 score;
 			iss2 >> score;
-			values.insert(std::make_pair(score, member));
+			values.insert(std::make_pair(member,score));
 		}
 	} while (false);
 

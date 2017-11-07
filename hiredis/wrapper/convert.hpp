@@ -2,6 +2,7 @@
 #define M_CONVERT_INCLUDE
 
 #include <sstream>
+#include <string.h>
 
 void convert_to_array(const char* src, char* dst, unsigned int dst_len)
 {

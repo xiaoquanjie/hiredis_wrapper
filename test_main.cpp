@@ -455,6 +455,84 @@ void set_command() {
 	}
 }
 
+void zset_cmd() {
+	try {
+		const char* key = "myzset";
+		RedisConnection conn = RedisPool::GetConnection("127.0.0.1", 6379);
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zadd²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			cout << conn.zadd(key, 10, "1990") << endl;
+			cout << conn.zadd(key, 20, 1991) << endl;
+
+			std::vector<std::pair<int, int> > vec;
+			vec.push_back(std::make_pair(1, 1992));
+			vec.push_back(std::make_pair(2, 1993));
+			cout << conn.zadd(key, vec) << endl;
+
+			std::map<string, int> m;
+			m["1994"] = 1;
+			m["1995"] = 2;
+			cout << conn.zadd(key, m) << endl;
+		}*/
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zrange²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			std::vector<int> vec1;
+			std::vector<string> vec2;
+			conn.zrange(key, 0, -1, vec1, (int*)0);
+			conn.zrange(key, 0, -1, vec2, (string*)0);
+			print_container(vec1);
+			print_container(vec2);
+		}*/
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zrangewithscores²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			std::vector<std::pair<int, int> > vec;
+			std::map<string, int> m;
+			conn.zrangewithscores(key, 0, -1, m);
+			conn.zrangewithscores(key, 0, -1, vec, (std::pair<int, int>*) 0);
+			print_container2(m);
+			print_container2(vec);
+		}
+		/*	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zrem²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+			{
+				cout << conn.zrem(key, std::string("1996")) << endl;
+				cout << conn.zrem(key, std::string("1995")) << endl;
+				cout << conn.zrem(key, 1994) << endl;
+
+				std::vector<int> vec1;
+				vec1.push_back(1997);
+				vec1.push_back(1998);
+				cout << conn.zrem(key, vec1, (int*)0) << endl;
+
+				std::vector<string> vec2;
+				vec2.push_back("1999");
+				vec2.push_back("2000");
+				cout << conn.zrem(key, vec2, (string*)0) << endl;
+			}*/
+			/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zrevrange²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+			{
+				std::vector<int> vec1;
+				std::vector<string> vec2;
+				conn.zrevrange(key, 0, -1, vec1, (int*)0);
+				conn.zrevrange(key, 0, -1, vec2, (string*)0);
+				print_container(vec1);
+				print_container(vec2);
+			}*/
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~zrevrangewithscores²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		{
+			std::vector<std::pair<int, int> > vec;
+			std::map<string, int> m;
+			conn.zrangewithscores(key, 0, -1, m);
+			conn.zrangewithscores(key, 0, -1, vec, (std::pair<int, int>*) 0);
+			print_container2(m);
+			print_container2(vec);
+		}
+	}
+	catch (RedisException&e) {
+		cout << e.What() << endl;
+	}
+
+}
+
 int main()
 {
 	//set_cmd();
@@ -474,6 +552,7 @@ int main()
 	//linsert_cmd();
 	//rpoplpush_cmd();
 	//hash_cmd();
-	set_command();
+	//set_command();
+	zset_cmd();
 	return 0;
 }
