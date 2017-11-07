@@ -83,10 +83,10 @@ void lrange_cmd() {
 	try {
 		RedisConnection conn = RedisPool::GetConnection("127.0.0.1", 6379);
 		std::vector<int> vec;
-		conn.lrange("int_l", 0, -1, vec);
+		conn.lrange("int_l", 0, -1, vec,(int*)0);
 		print_container(vec);
 		std::vector<std::string> vec2;
-		conn.lrange("int_l", 0, -1, vec2);
+		conn.lrange("int_l", 0, -1, vec2,(std::string*)0);
 		print_container(vec2);
 
 	}
@@ -123,11 +123,11 @@ void rpush_cmd() {
 		std::vector<int> int_vec;
 		int_vec.push_back(1);
 		int_vec.push_back(2);
-		cout << conn.rpush("int_l", int_vec) << endl;
+		cout << conn.rpush("int_l", int_vec,(int*)0) << endl;
 		std::vector<string> str_vec;
 		str_vec.push_back("a");
 		str_vec.push_back("b");
-		cout << conn.rpush("int_l", str_vec) << endl;
+		cout << conn.rpush("int_l", str_vec,(string*)0) << endl;
 	}
 	catch (RedisException&e) {
 		cout << e.What() << endl;
@@ -242,28 +242,29 @@ void hash_cmd() {
 		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hgetall²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
 			std::map<std::string, std::string> mymap;
-			std::map<std::string, int> mymap2;
+			std::vector<std::pair<std::string, string> > vec;
 			conn.hgetall("myhash", mymap);
-			conn.hgetall("myhash", mymap2);
+			conn.hgetall("myhash", vec, (std::pair<std::string, string>*)0);
 			print_container2(mymap);
-			print_container2(mymap2);
+			print_container2(vec);
 		}*/
 		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hsetnx²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
 			cout << conn.hsetnx("myhash", "name", "12345") << endl;
 			cout << conn.hsetnx("myhash", "weight", "123.45") << endl;
 		}*/
-		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hmset²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hmset²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
-			std::map<int, int> map1;
-			map1[1] = 1;
-			map1[2] = 2;
 			std::map<std::string, std::string> map2;
 			map2["jie"] = 3;
 			map2["quan"] = 4;
-			conn.hmset("myhash", map1);
 			conn.hmset("myhash", map2);
-		}*/
+
+			std::vector<pair<int, int> > vec;
+			vec.push_back(make_pair(1000, 11));
+			vec.push_back(make_pair(1001, 12));
+			conn.hmset("myhash", vec, (pair<int, int>*)0);
+		}
 		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hmget²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
 			std::vector<TriangleValule<std::string, std::string> > values;
@@ -279,13 +280,13 @@ void hash_cmd() {
 				cout << iter->Key() << " " << iter->_valid << " " << iter->_value << endl;
 			}
 		}*/
-		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hincrby²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hincrby²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
 			int value = 0;
 			conn.hincrby("myhash", "score", value);
 			cout << value << endl;
-			
-		}
+
+		}*/
 		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hexists²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
 			cout << conn.hexists("myhash", "score") << endl;
@@ -306,12 +307,12 @@ void hash_cmd() {
 			conn.hkeys("myhash", vec, std::string());
 			print_container(vec);
 		}*/
-		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hvals²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		/*cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~hvals²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		{
 			std::vector<int> vec;
 			conn.hvals("myhash", vec, (int*)0);
 			print_container(vec);
-		}
+		}*/
 		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~end²âÊÔ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 	}
 	catch (RedisException&e) {
@@ -608,26 +609,6 @@ void other_cmd() {
 
 int main()
 {
-	//set_cmd();
-	//setbit_cmd();
-	//getbit_cmd();
-	//del_cmd();
-	//lpush_cmd();
-	//lrange_cmd();
-	//lpop_cmd();
-	//rpush_cmd();
-	//rpop_cmd();
-	//llen_cmd();
-	//lindex_cmd();
-	//lset_cmd();
-	//lrem_cmd();
-	//ltrim_cmd();
-	//linsert_cmd();
-	//rpoplpush_cmd();
-	//hash_cmd();
-	//set_command();
-	//zset_cmd();
-	//other_cmd();
-	lpush_cmd();
+	hash_cmd();
 	return 0;
 }

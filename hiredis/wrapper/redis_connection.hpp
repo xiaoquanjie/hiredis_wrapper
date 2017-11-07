@@ -158,12 +158,9 @@ public:
 	inline void hget(const char* key, const char* field, char* value, unsigned int len);
 
 	template<typename T1,typename T2>
-	inline void hgetall(const char* key, std::map<T1, T2>& values);
-	inline void hgetall(const char* key, std::map<std::string, std::string>& values);
-	template<typename T>
-	inline void hgetall(const char* key, std::map<T, std::string>& values);
-	template<typename T>
-	inline void hgetall(const char* key, std::map<std::string, T>& values);
+	void hgetall(const char* key, std::map<T1, T2>& values);
+	template<typename T1, typename T2, typename T3>
+	void hgetall(const char* key, T1& values,std::pair<T2, T3>*);
 
 	// 如果key已存在，则设置失败
 	template<typename T>
@@ -174,12 +171,9 @@ public:
 	inline bool hsetnx(const char* key, const char* field, const char(&value)[N]);
 
 	template<typename T1, typename T2>
-	inline void hmset(const char* key, const std::map<T1, T2>& values);
-	inline void hmset(const char* key, const std::map<std::string, std::string>& values);
-	template<typename T>
-	inline void hmset(const char* key, const std::map<T, std::string>& values);
-	template<typename T>
-	inline void hmset(const char* key, const std::map<std::string, T>& values);
+	void hmset(const char* key, const std::map<T1, T2>& values);
+	template<typename T1, typename T2, typename T3>
+	void hmset(const char* key, const T1& values, std::pair<T2, T3>*);
 
 	// values是in-out值
 	template<typename T1, typename T2>

@@ -116,11 +116,9 @@ inline void RedisConnection::hget(const char* key, const char* field, char* valu
 
 
 template<typename T1, typename T2>
-inline void RedisConnection::hgetall(const char* key, std::map<T1, T2>& values)
+void RedisConnection::hgetall(const char* key, std::map<T1, T2>& values)
 {
-	values.clear();
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "HGETALL %s";
 	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(),key);
 	if (!reply)
@@ -154,44 +152,10 @@ inline void RedisConnection::hgetall(const char* key, std::map<T1, T2>& values)
 	if (!error.Empty())
 		throw error;
 }
-inline void RedisConnection::hgetall(const char* key, std::map<std::string, std::string>& values)
+template<typename T1, typename T2, typename T3>
+void RedisConnection::hgetall(const char* key, T1& values, std::pair<T2, T3>*)
 {
-	values.clear();
 	M_CHECK_REDIS_CONTEXT(_context);
-
-	std::string k = "HGETALL %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), key);
-	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
-
-	RedisException error;
-	do
-	{
-		if (reply->type == REDIS_REPLY_ERROR) {
-			error = RedisException(reply->str);
-			break;
-		}
-		if (reply->type != REDIS_REPLY_ARRAY) {
-			error = RedisException(M_ERR_NOT_DEFINED);
-			break;
-		}
-		for (size_t idx = 0; idx < reply->elements; idx += 2)
-		{
-			values.insert(std::make_pair(std::string(reply->element[idx]->str, reply->element[idx]->len),
-				std::string(reply->element[idx + 1]->str, reply->element[idx + 1]->len)));
-		}
-	} while (false);
-
-	freeReplyObject(reply);
-	if (!error.Empty())
-		throw error;
-}
-template<typename T>
-inline void RedisConnection::hgetall(const char* key, std::map<T, std::string>& values)
-{
-	values.clear();
-	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "HGETALL %s";
 	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), key);
 	if (!reply)
@@ -211,10 +175,13 @@ inline void RedisConnection::hgetall(const char* key, std::map<T, std::string>& 
 		for (size_t idx = 0; idx < reply->elements; idx += 2)
 		{
 			std::istringstream iss1(std::string(reply->element[idx]->str, reply->element[idx]->len));
-			T value1;
+			std::istringstream iss2(std::string(reply->element[idx + 1]->str, reply->element[idx + 1]->len));
+
+			T2 value1;
 			iss1 >> value1;
-			values.insert(std::make_pair(value1, 
-				std::string(reply->element[idx + 1]->str, reply->element[idx + 1]->len)));
+			T3 value2;
+			iss2 >> value2;
+			values.push_back(std::make_pair(value1, value2));
 		}
 	} while (false);
 
@@ -222,42 +189,6 @@ inline void RedisConnection::hgetall(const char* key, std::map<T, std::string>& 
 	if (!error.Empty())
 		throw error;
 }
-template<typename T>
-inline void RedisConnection::hgetall(const char* key, std::map<std::string, T>& values)
-{
-	values.clear();
-	M_CHECK_REDIS_CONTEXT(_context);
-
-	std::string k = "HGETALL %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), key);
-	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
-
-	RedisException error;
-	do
-	{
-		if (reply->type == REDIS_REPLY_ERROR) {
-			error = RedisException(reply->str);
-			break;
-		}
-		if (reply->type != REDIS_REPLY_ARRAY) {
-			error = RedisException(M_ERR_NOT_DEFINED);
-			break;
-		}
-		for (size_t idx = 0; idx < reply->elements; idx += 2)
-		{
-			std::istringstream iss1(std::string(reply->element[idx + 1]->str, reply->element[idx + 1]->len));
-			T value1;
-			iss1 >> value1;
-			values.insert(std::make_pair(std::string(reply->element[idx]->str, reply->element[idx]->len), value1));
-		}
-	} while (false);
-
-	freeReplyObject(reply);
-	if (!error.Empty())
-		throw error;
-}
-
 
 template<typename T>
 inline bool RedisConnection::hsetnx(const char* key, const char* field, const T& value)
@@ -308,7 +239,7 @@ inline bool RedisConnection::hsetnx(const char* key, const char* field, const ch
 
 
 template<typename T1, typename T2>
-inline void RedisConnection::hmset(const char* key, const std::map<T1, T2>& values)
+void RedisConnection::hmset(const char* key, const std::map<T1, T2>& values)
 {
 	if (values.empty())
 		return;
@@ -349,56 +280,21 @@ inline void RedisConnection::hmset(const char* key, const std::map<T1, T2>& valu
 	if (!error.Empty())
 		throw error;
 }
-inline void RedisConnection::hmset(const char* key, const std::map<std::string, std::string>& values)
+template<typename T1, typename T2, typename T3>
+void RedisConnection::hmset(const char* key, const T1& values, std::pair<T2, T3>*)
 {
 	if (values.empty())
 		return;
 	M_CHECK_REDIS_CONTEXT(_context);
 
 	std::string k = "HMSET " + std::string(key) + " ";
-	for (std::map<std::string, std::string>::const_iterator iter=values.begin(); 
-		iter!=values.end(); ++iter){
-		k += iter->first + " " + iter->second + " ";
-	}
-
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
-	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
-
-	RedisException error;
-	do 
-	{
-		if (reply->type == REDIS_REPLY_ERROR) {
-			error = RedisException(reply->str);
-			break;
-		}
-		if (reply->type != REDIS_REPLY_STATUS) {
-			error = RedisException(M_ERR_NOT_DEFINED);
-			break;
-		}
-		if (strcasecmp(reply->str, "OK") != 0) {
-			error = RedisException(reply->str);
-			break;
-		}
-	} while (false);
-
-	freeReplyObject(reply);
-	if (!error.Empty())
-		throw error;
-}
-template<typename T>
-inline void RedisConnection::hmset(const char* key, const std::map<T, std::string>& values)
-{
-	if (values.empty())
-		return;
-	M_CHECK_REDIS_CONTEXT(_context);
-
-	std::string k = "HMSET " + std::string(key) + " ";
-	for (typename std::map<T, std::string>::const_iterator iter = values.begin();
+	for (typename T1::const_iterator iter = values.begin();
 		iter != values.end(); ++iter) {
-		std::ostringstream oss;
-		oss << iter->first;
-		k += oss.str() + " " + iter->second + " ";
+		std::ostringstream oss1;
+		oss1 << iter->first;
+		std::ostringstream oss2;
+		oss2 << iter->second;
+		k += oss1.str() + " " + oss2.str() + " ";
 	}
 
 	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
@@ -426,47 +322,6 @@ inline void RedisConnection::hmset(const char* key, const std::map<T, std::strin
 	if (!error.Empty())
 		throw error;
 }
-template<typename T>
-inline void RedisConnection::hmset(const char* key, const std::map<std::string, T>& values)
-{
-	if (values.empty())
-		return;
-	M_CHECK_REDIS_CONTEXT(_context);
-
-	std::string k = "HMSET " + std::string(key) + " ";
-	for (typename std::map<std::string, T>::const_iterator iter = values.begin();
-		iter != values.end(); ++iter) {
-		std::ostringstream oss;
-		oss << iter->second;
-		k += iter->first + " " + oss.str() + " ";
-	}
-
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
-	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
-
-	RedisException error;
-	do
-	{
-		if (reply->type == REDIS_REPLY_ERROR) {
-			error = RedisException(reply->str);
-			break;
-		}
-		if (reply->type != REDIS_REPLY_STATUS) {
-			error = RedisException(M_ERR_NOT_DEFINED);
-			break;
-		}
-		if (strcasecmp(reply->str, "OK") != 0) {
-			error = RedisException(reply->str);
-			break;
-		}
-	} while (false);
-
-	freeReplyObject(reply);
-	if (!error.Empty())
-		throw error;
-}
-
 
 template<typename T1, typename T2>
 inline void RedisConnection::hmget(const char* key, std::vector<TriangleValule<T1, T2> >&values)
