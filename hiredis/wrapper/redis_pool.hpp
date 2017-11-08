@@ -1,8 +1,11 @@
 #ifndef M_REDIS_POOL_INCLUDE
 #define M_REDIS_POOL_INCLUDE
 
-#include <stdlib.h>
 #include <arpa/inet.h>
+#include "mutex.hpp"
+#include <set>
+
+// Note: A redisContext is not thread - safe.
 
 // 线程局部对象
 template<typename T>
@@ -20,23 +23,23 @@ struct _redisaddr_ {
 
 	unsigned long long two_only_id()const {
 		unsigned long long v = ((unsigned long long)_ip << 32);
-		v += (_port << 16);
+		v += ((unsigned long long)_port << 16);
 		return v;
 	}
 	unsigned long long three_only_id()const {
 		unsigned long long v = ((unsigned long long)_ip << 32);
-		v += (_port << 16);
+		v += ((unsigned long long)_port << 16);
 		v += _db;
 		return v;
 	}
 	static unsigned long long two_only_id(unsigned int ip, unsigned short port){
 		unsigned long long v = ((unsigned long long)ip << 32);
-		v += (port << 16);
+		v += ((unsigned long long)port << 16);
 		return v;
 	}
 	static unsigned long long three_only_id(unsigned int ip, unsigned short port,unsigned short db){
 		unsigned long long v = ((unsigned long long)ip << 32);
-		v += (port << 16);
+		v += ((unsigned long long)port << 16);
 		v += db;
 		return v;
 	}
@@ -47,9 +50,15 @@ struct _redisinfo_ {
 	std::map<void*, unsigned long long> _revinfo;
 };
 
+struct _rediscontext {
+	redisContext* _context;
+};
+
 // redis连接池
 class RedisPool
 {
+private:
+	static std::set<redisContext*> _context_set;
 public:
 	// 每个线程都会有一个连接,最好别跨线程使用,否则不保证线程安全
 	static RedisConnection GetConnection(const std::string& ip, unsigned short port);
@@ -67,6 +76,8 @@ private:
 	static inline void _freeRedisContext(redisContext* context);
 };
 
+std::set<redisContext*> RedisPool::_context_set;
+
 RedisConnection RedisPool::GetConnection(const std::string& ip, unsigned short port)
 {
 	return GetConnection(ip, port, 0);
@@ -76,7 +87,7 @@ RedisConnection RedisPool::GetConnection(const std::string& ip, unsigned short p
 {
 	typedef ThreadLocalData<int> RedisDataType;
 	if (!RedisDataType::_pt) {
-		RedisDataType::_pt = (int*)malloc(sizeof(_redisinfo_));
+		RedisDataType::_pt = (int*)(new _redisinfo_);
 	}
 
 	_redisinfo_* pinfo = (_redisinfo_*)RedisDataType::_pt;

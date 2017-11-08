@@ -1,6 +1,6 @@
 project:
-	g++ -c test_main.cpp -Ihiredis
-	g++ -o project test_main.o -lhiredis -L.
+	g++ -c test_main.cpp thread.cpp -Ihiredis
+	g++ -o project test_main.o thread.o -lhiredis -lpthread -L.
 	
 clean:
-	rm -f project test_main.o
+	rm -f project test_main.o thread.o project

@@ -609,9 +609,14 @@ void other_cmd() {
 }
 
 void thread_func(void*) {
-	RedisConnection conn1 = RedisPool::GetConnection("127.0.0.1", 6379, 0);
-	RedisConnection conn2 = RedisPool::GetConnection("127.0.0.1", 6379, 1);
-	cout << conn1.ConnectionId() << " " << conn2.ConnectionId() << endl;
+
+	for (int i = 0; i < 2; ++i)
+	{
+		RedisConnection conn1 = RedisPool::GetConnection("127.0.0.1", 6379, 0);
+		RedisConnection conn2 = RedisPool::GetConnection("127.0.0.1", 6379, 1);
+		cout << thread::ctid() << " " << conn1.ConnectionId() << " " << conn2.ConnectionId() << endl;
+	}
+	
 }
 
 int main()
@@ -623,7 +628,7 @@ int main()
 
 	thr1.join();
 	thr2.join();
-	
+
 	int i = 0;
 	cin >> i;
 	return 0;
