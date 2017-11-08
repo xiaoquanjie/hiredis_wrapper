@@ -32,13 +32,13 @@
 // redis“Ï≥£
 struct RedisException
 {
-	RedisException() {}
+	RedisException() :_code(-1) {}
 
-	RedisException(const char* what) {
+	RedisException(const char* what):_code(-1) {
 		_what.reset(new std::string(what));
 	}
 
-	RedisException(const std::string& what) {
+	RedisException(const std::string& what) :_code(-1) {
 		_what.reset(new std::string(what));
 	}
 
@@ -48,12 +48,17 @@ struct RedisException
 		return *_what;
 	}
 
+	int Code()const {
+		return _code;
+	}
+
 	bool Empty()const {
 		return (!_what);
 	}
 
 private:
 	shard_ptr_t<std::string> _what;
+	int _code;
 };
 
 template<typename T1,typename T2>
@@ -118,6 +123,9 @@ struct TriangleValule<std::string,T> {
 	}
 };
 
+///////////////////////////////////////////////////////////////////////////
+#define M_ERR_CODE_NOT_DEFINED (-1)
+///////////////////////////////////////////////////////////////////////////
 #define M_ERR_NOT_DEFINED			("not defined error")
 #define M_ERR_REDIS_CONNECT_FAIL	("redisConnect fail")
 #define M_ERR_REDIS_NOT_CONNECTED	("redis is not connected")
@@ -125,15 +133,6 @@ struct TriangleValule<std::string,T> {
 #define M_ERR_REDIS_TYPE_NOT_MATCH	("type doesn't match")
 #define M_ERR_REDIS_KEY_NOT_EXIST	("key not exist")
 #define M_ERR_REDIS_ARRAY_SIZE_NOT_MATCH	("array size doesn't match")
-
-std::string gTypeStr[REDIS_REPLY_ERROR + 1] = {
-	" not defined",
-	" string",
-	" array",
-	" integer",
-	" nil",
-	" status",
-	" error"
-};
+#define M_ERR_REDIS_SELECT_DB_ERROR ("select db error")
 
 #endif

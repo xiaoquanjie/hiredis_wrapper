@@ -2,10 +2,15 @@
 #define M_REDIS_OTHERS_INCLUDE
 
 inline RedisConnection::RedisConnection()
-	:_context(0) {}
+	:_context(0),_reconn_time(0){}
 
 inline RedisConnection::RedisConnection(redisContext* context)
-	: _context(context) {}
+	: _context(context),_reconn_time(0){}
+
+unsigned long long RedisConnection::ConnectionId()const {
+	unsigned long long v = (unsigned long long)(_context);
+	return v;
+}
 
 inline bool RedisConnection::expire(const char* key, time_t expire)
 {

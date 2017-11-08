@@ -1,6 +1,7 @@
 #include <iostream>
 #include "wrapper/redis_wrapper.hpp"
 #include "wrapper/variant.h"
+#include "thread.hpp"
 
 using namespace std;
 
@@ -607,8 +608,23 @@ void other_cmd() {
 	}
 }
 
+void thread_func(void*) {
+	RedisConnection conn1 = RedisPool::GetConnection("127.0.0.1", 6379, 0);
+	RedisConnection conn2 = RedisPool::GetConnection("127.0.0.1", 6379, 1);
+	cout << conn1.ConnectionId() << " " << conn2.ConnectionId() << endl;
+}
+
 int main()
 {
-	hash_cmd();
+	cout << sizeof(unsigned long long) << endl;
+	thread thr1(&thread_func, 0);
+	thread::sleep(200);
+	thread thr2(&thread_func, 0);
+
+	thr1.join();
+	thr2.join();
+	
+	int i = 0;
+	cin >> i;
 	return 0;
 }

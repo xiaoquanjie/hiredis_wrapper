@@ -6,10 +6,12 @@
 //http://www.cnblogs.com/hjwublog/p/5639990.html
 //https://redis.io/commands/setbit
 
-// redis连接
+// redis连接,支持断线重连
 class RedisConnection
 {
 public:
+	friend class RedisPool;
+
 	inline RedisConnection();
 
 	inline RedisConnection(redisContext* context);
@@ -18,8 +20,11 @@ public:
 		return (_context != 0);
 	}
 
+	unsigned long long ConnectionId()const;
+
 	// 超时命令
 	inline bool expire(const char* key, time_t expire);
+
 	// 1为key存在，0表示key不存在
 	inline int del(const char* key);
 	template<typename T>
@@ -325,6 +330,7 @@ public:
 
 private:
 	redisContext* _context;
+	time_t        _reconn_time; // 断线重连时间
 };
 
 
