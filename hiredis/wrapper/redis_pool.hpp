@@ -50,15 +50,26 @@ struct _redisinfo_ {
 	std::map<void*, unsigned long long> _revinfo;
 };
 
-struct _rediscontext {
-	redisContext* _context;
+struct _redisinfoset_ {
+	std::set<_rediscontext_*> _contexts;
+
+	~_redisinfoset_() {
+		for (std::set<_rediscontext_*>::iterator iter = _contexts.begin();
+			iter != _contexts.end(); ++iter) {
+			redisFree((*iter)->_context);
+			delete ((_rediscontext_*)*iter);
+		}
+		_contexts.clear();
+	}
 };
 
 // redis连接池
 class RedisPool
 {
 private:
-	static std::set<redisContext*> _context_set;
+	static _redisinfoset_ _contexts;
+	static _redis_detail::MutexLock _mutex;
+
 public:
 	// 每个线程都会有一个连接,最好别跨线程使用,否则不保证线程安全
 	static RedisConnection GetConnection(const std::string& ip, unsigned short port);
@@ -67,16 +78,18 @@ public:
 	static RedisConnection GetConnection(const std::string& ip, unsigned short port, unsigned short database);
 
 	// 释放连接
-	static void ReleaseConnection(redisContext* context);
 	static void ReleaseConnection(RedisConnection& con);
 
 private:
+	static void _releaseConnection(_rediscontext_* context);
+
 	static bool _selectdb(redisContext* context, unsigned short db);
 
 	static inline void _freeRedisContext(redisContext* context);
 };
 
-std::set<redisContext*> RedisPool::_context_set;
+_redisinfoset_ RedisPool::_contexts;
+_redis_detail::MutexLock RedisPool::_mutex;
 
 RedisConnection RedisPool::GetConnection(const std::string& ip, unsigned short port)
 {
@@ -96,7 +109,7 @@ RedisConnection RedisPool::GetConnection(const std::string& ip, unsigned short p
 
 	std::map<unsigned long long, void*>::iterator iter = pinfo->_info.find(unique_id);
 	if (iter!=pinfo->_info.end()) {
-		return RedisConnection((redisContext*)iter->second);
+		return RedisConnection((_rediscontext_*)iter->second);
 	}
 	else {
 		redisContext* context = redisConnect(ip.c_str(), port);
@@ -113,9 +126,18 @@ RedisConnection RedisPool::GetConnection(const std::string& ip, unsigned short p
 			throw e;
 		}
 
-		pinfo->_info[unique_id] = (void*)context;
-		pinfo->_revinfo[context] = unique_id;
-		return RedisConnection(context);
+		_rediscontext_* _context_ = new _rediscontext_;
+		_context_->_context = context;
+		_context_->_ip = ip;
+		_context_->_port = port;
+		_context_->_db = database;
+		pinfo->_info[unique_id] = (void*)_context_;
+		pinfo->_revinfo[_context_] = unique_id;
+		{
+			_redis_detail::ScopedLock scoped_l(_mutex);
+			_contexts._contexts.insert(_context_);
+		}
+		return RedisConnection(_context_);
 	}
 }
 
@@ -152,7 +174,7 @@ bool RedisPool::_selectdb(redisContext* context, unsigned short db)
 	return true;
 }
 
-void RedisPool::ReleaseConnection(redisContext* context)
+void RedisPool::_releaseConnection(_rediscontext_* context)
 {
 	do 
 	{
@@ -167,13 +189,15 @@ void RedisPool::ReleaseConnection(redisContext* context)
 
 		pinfo->_info.erase(iter->second);
 		pinfo->_revinfo.erase(iter);
+		_contexts._contexts.erase(context);
 	} while (false);
-	_freeRedisContext(context);
+	_freeRedisContext(context->_context);
 }
 
 void RedisPool::ReleaseConnection(RedisConnection& con)
 {
-	ReleaseConnection(con._context);
+	_releaseConnection(con._context);
+	delete con._context;
 	con._context = 0;
 }
 

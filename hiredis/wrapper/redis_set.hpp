@@ -11,9 +11,8 @@ int RedisConnection::sadd(const char*key, const T& value)
 int RedisConnection::sadd(const char*key, const std::string&value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "SADD %s %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), key, value.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), key, value.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -42,7 +41,6 @@ template<typename T>
 int RedisConnection::sadd(const char*key, const T& values, typename T::value_type*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "SADD " + std::string(key);
 	for (typename T::const_iterator iter = values.begin();
 		iter != values.end(); ++iter) {
@@ -51,7 +49,7 @@ int RedisConnection::sadd(const char*key, const T& values, typename T::value_typ
 		k += " " + oss.str() + " ";
 	}
 
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -80,13 +78,12 @@ template<typename T>
 int RedisConnection::sadd(const char*key, const T& values, std::string*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "SADD " + std::string(key);
 	for (typename T::const_iterator iter=values.begin();
 		iter!=values.end(); ++iter)
 		k += " " + *iter + " ";
 
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -118,8 +115,7 @@ template<typename T>
 void RedisConnection::smembers(const char*key, T&values, typename T::value_type*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
-	redisReply* reply = (redisReply*)redisCommand(_context, "SMEMBERS %s", key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "SMEMBERS %s", key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -150,8 +146,7 @@ template<typename T>
 void RedisConnection::smembers(const char*key, T&values, std::string*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
-	redisReply* reply = (redisReply*)redisCommand(_context, "SMEMBERS %s", key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "SMEMBERS %s", key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -181,7 +176,7 @@ template<typename T>
 bool RedisConnection::spop(const char*key, T&value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "SPOP %s", key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "SPOP %s", key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -210,7 +205,7 @@ bool RedisConnection::spop(const char*key, T&value)
 bool RedisConnection::spop(const char*key, std::string&value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "SPOP %s", key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "SPOP %s", key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -240,7 +235,7 @@ bool RedisConnection::spop(const char*key, std::string&value)
 bool RedisConnection::spop(const char*key, char*value, unsigned int len)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "SPOP %s", key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "SPOP %s", key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -278,7 +273,7 @@ bool RedisConnection::srem(const char*key, const T& field)
 bool RedisConnection::srem(const char*key, const char* field)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "SREM %s %s", key, field);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "SREM %s %s", key, field);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -308,8 +303,7 @@ bool RedisConnection::srem(const char*key, const char* field)
 int RedisConnection::scard(const char*key)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
-	redisReply* reply = (redisReply*)redisCommand(_context, "SCARD %s", key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "SCARD %s", key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -337,7 +331,7 @@ int RedisConnection::scard(const char*key)
 bool RedisConnection::sismember(const char*key, const char* field)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "SISMEMBER %s %s",key,field);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "SISMEMBER %s %s",key,field);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -377,7 +371,7 @@ bool RedisConnection::smove(const char* src_key, const char* dst_key, const T& f
 	std::ostringstream oss;
 	oss << field;
 	k += " " + oss.str();
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -405,7 +399,7 @@ bool RedisConnection::smove(const char* src_key, const char* dst_key, const T& f
 bool RedisConnection::smove(const char* src_key, const char* dst_key, const char* field)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "SMOVE %s %s %s", src_key, dst_key,field);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "SMOVE %s %s %s", src_key, dst_key,field);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -435,7 +429,7 @@ template<typename T>
 bool RedisConnection::srandmember(const char*key, T&value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "SRANDMEMBER %s", key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "SRANDMEMBER %s", key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -464,7 +458,7 @@ bool RedisConnection::srandmember(const char*key, T&value)
 bool RedisConnection::srandmember(const char*key, std::string&value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "SRANDMEMBER %s", key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "SRANDMEMBER %s", key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -494,7 +488,7 @@ template<typename T>
 void RedisConnection::srandmember(const char*key, T&values, int count, typename T::value_type*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "SRANDMEMBER %s %d", key,count);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "SRANDMEMBER %s %d", key,count);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -525,7 +519,7 @@ template<typename T>
 void RedisConnection::srandmember(const char*key, T&values, int count, std::string*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "SRANDMEMBER %s %d", key, count);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "SRANDMEMBER %s %d", key, count);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -559,7 +553,7 @@ void RedisConnection::sdiff(const char* key, const std::vector<std::string>& oth
 	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
 		k += *iter + " ";
 	}
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -593,7 +587,7 @@ void RedisConnection::sdiff(const char* key, const std::vector<std::string>& oth
 	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
 		k += *iter + " ";
 	}
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -627,7 +621,7 @@ void RedisConnection::sunion(const char* key, const std::vector<std::string>& ot
 	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
 		k += *iter + " ";
 	}
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -661,7 +655,7 @@ void RedisConnection::sunion(const char* key, const std::vector<std::string>& ot
 	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
 		k += *iter + " ";
 	}
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -694,7 +688,7 @@ void RedisConnection::sinter(const char* key, const std::vector<std::string>& ot
 	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
 		k += *iter + " ";
 	}
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -728,7 +722,7 @@ void RedisConnection::sinter(const char* key, const std::vector<std::string>& ot
 	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
 		k += *iter + " ";
 	}
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -760,7 +754,7 @@ int RedisConnection::sdiffstore(const char* key, const std::vector<std::string>&
 	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
 		k += *iter + " ";
 	}
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -791,7 +785,7 @@ int RedisConnection::sunionstore(const char* key, const std::vector<std::string>
 	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
 		k += *iter + " ";
 	}
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -822,7 +816,7 @@ int RedisConnection::sinterstore(const char* key, const std::vector<std::string>
 	for (std::vector<std::string>::const_iterator iter = other_keys.begin(); iter != other_keys.end(); ++iter) {
 		k += *iter + " ";
 	}
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 

@@ -6,7 +6,14 @@
 //http://www.cnblogs.com/hjwublog/p/5639990.html
 //https://redis.io/commands/setbit
 
-// redis连接,支持断线重连
+struct _rediscontext_ {
+	redisContext*  _context;
+	std::string    _ip;
+	unsigned short _port;
+	unsigned short _db;
+};
+
+// redis连接
 class RedisConnection
 {
 public:
@@ -14,7 +21,7 @@ public:
 
 	inline RedisConnection();
 
-	inline RedisConnection(redisContext* context);
+	inline RedisConnection(_rediscontext_* context);
 
 	bool connected()const {
 		return (_context != 0);
@@ -329,13 +336,12 @@ public:
 	void zscore(const char* key, const char* member, T& score);
 
 private:
-	redisContext* _context;
-	time_t        _reconn_time; // 断线重连时间
+	_rediscontext_* _context;
 };
 
 
 #define M_CHECK_REDIS_CONTEXT(context)\
 	if (!_context) throw RedisException(M_ERR_REDIS_NOT_CONNECTED);
-
+#define M_REDIS_CONTEXT(context) context->_context
 
 #endif

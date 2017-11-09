@@ -11,9 +11,8 @@ inline void RedisConnection::set(const char* key, T value)
 inline void RedisConnection::set(const char* key, const std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = std::string("SET ") + std::string(key) + " %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(),value.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(),value.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -59,9 +58,8 @@ inline void RedisConnection::get(const char* key, T& value)
 inline void RedisConnection::get(const char* key, std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = std::string("GET ") + key;
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -88,9 +86,8 @@ inline void RedisConnection::get(const char* key, std::string& value)
 inline void RedisConnection::get(const char* key, char* value, unsigned int len)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = std::string("GET ") + key;
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -126,9 +123,8 @@ template<typename T>
 inline void RedisConnection::incrby(const char* key, int step, T& new_value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "INCRBY " + std::string(key) + " %d";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), step);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), step);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -165,9 +161,8 @@ template<typename T>
 inline void RedisConnection::decrby(const char* key, int step, T& new_value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "DECRBY " + std::string(key) + " %d";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), step);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), step);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -208,9 +203,8 @@ inline void RedisConnection::decr(const char* key)
 inline int RedisConnection::strlen(const char* key)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "STRLEN " + std::string(key);
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -238,9 +232,8 @@ inline int RedisConnection::strlen(const char* key)
 inline int RedisConnection::append(const char* key, const std::string& app_value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "APPEND " + std::string(key) + " %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(),app_value.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(),app_value.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -281,9 +274,8 @@ inline bool RedisConnection::setnx(const char* key, T value)
 inline bool RedisConnection::setnx(const char* key, const std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "SETNX " + std::string(key) + " %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(),value.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(),value.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -329,9 +321,8 @@ inline void RedisConnection::setex(const char* key, T value, time_t expire)
 inline void RedisConnection::setex(const char* key, const std::string& value, time_t expire)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "SETEX " + std::string(key) + " %d %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(),expire,value.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(),expire,value.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -369,9 +360,8 @@ inline void RedisConnection::setex(const char* key, const char(&value)[N], time_
 inline void RedisConnection::getrange(const char* key, int beg_idx, int end_idx, std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = std::string("GETRANGE ") + std::string(key) + " %d %d";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), beg_idx, end_idx);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), beg_idx, end_idx);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -402,9 +392,8 @@ inline int RedisConnection::setrange(const char* key, int beg_idx, const char* v
 inline int RedisConnection::setrange(const char* key, int beg_idx, const std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = std::string("SETRANGE ") + std::string(key) + " %d %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(),beg_idx,value.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(),beg_idx,value.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -438,11 +427,10 @@ inline int RedisConnection::setrange(const char* key, int beg_idx, const char(&v
 inline int RedisConnection::setbit(const char* key, unsigned int offset, int value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	if (value != 0)
 		value = 1;
 	std::string k = "SETBIT " + std::string(key) + " %d %d";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), offset, value);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), offset, value);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -470,9 +458,8 @@ inline int RedisConnection::setbit(const char* key, unsigned int offset, int val
 inline int RedisConnection::getbit(const char* key, unsigned int offset)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "GETBIT " + std::string(key) + " %d";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), offset);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), offset);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 

@@ -101,5 +101,11 @@
     <ClInclude Include="hiredis\wrapper\convert.hpp">
       <Filter>hiredis\wrapper</Filter>
     </ClInclude>
+    <ClInclude Include="hiredis\wrapper\mutex.hpp">
+      <Filter>hiredis\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="hiredis\wrapper\redis_sort_set.hpp">
+      <Filter>hiredis\wrapper</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -19,8 +19,8 @@ int RedisConnection::lpush(const char* key, const T& values, typename T::value_t
 {
 	if (values.empty())
 		return 0;
-	M_CHECK_REDIS_CONTEXT(_context);
 
+	M_CHECK_REDIS_CONTEXT(_context);
 	std::string k = "LPUSH " + std::string(key) + " ";
 	for (typename T::const_iterator iter = values.begin();
 		iter != values.end(); ++iter) {
@@ -29,7 +29,7 @@ int RedisConnection::lpush(const char* key, const T& values, typename T::value_t
 		k += oss.str() + " ";
 	}
 
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -59,14 +59,14 @@ int RedisConnection::lpush(const char* key, const T& values, std::string*)
 {
 	if (values.empty())
 		return 0;
-	M_CHECK_REDIS_CONTEXT(_context);
 
+	M_CHECK_REDIS_CONTEXT(_context);
 	std::string k = "LPUSH " + std::string(key) + " ";
 	for (typename T::const_iterator iter = values.begin();
 		iter != values.end(); ++iter)
 		k += *iter + " ";
 
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -99,7 +99,7 @@ void RedisConnection::lrange(const char* key, int beg_idx, int end_idx, T& value
 	M_CHECK_REDIS_CONTEXT(_context);
 
 	std::string k = "LRANGE " + std::string(key) + " %d %d";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), beg_idx, end_idx);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), beg_idx, end_idx);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -131,9 +131,8 @@ template<typename T>
 void RedisConnection::lrange(const char* key, int beg_idx, int end_idx, T& values, std::string*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "LRANGE " + std::string(key) + " %d %d";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), beg_idx, end_idx);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), beg_idx, end_idx);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -174,9 +173,8 @@ inline bool RedisConnection::lpop(const char* key, T& value)
 inline bool RedisConnection::lpop(const char*key, std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "LPOP " + std::string(key);
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -210,9 +208,8 @@ inline bool RedisConnection::lpop(const char*key, std::string& value)
 inline bool RedisConnection::lpop(const char*key, char* value, unsigned int len)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "LPOP " + std::string(key);
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -263,8 +260,8 @@ int RedisConnection::rpush(const char* key, const T& values, typename T::value_t
 {
 	if (values.empty())
 		return 0;
-	M_CHECK_REDIS_CONTEXT(_context);
 
+	M_CHECK_REDIS_CONTEXT(_context);
 	std::string k = "RPUSH " + std::string(key) + " ";
 	for (typename T::const_iterator iter = values.begin();
 		iter != values.end(); ++iter) {
@@ -273,7 +270,7 @@ int RedisConnection::rpush(const char* key, const T& values, typename T::value_t
 		k += oss.str() + " ";
 	}
 
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -303,14 +300,14 @@ int RedisConnection::rpush(const char* key, const T& values, std::string*)
 {
 	if (values.empty())
 		return 0;
-	M_CHECK_REDIS_CONTEXT(_context);
 
+	M_CHECK_REDIS_CONTEXT(_context);
 	std::string k = "RPUSH " + std::string(key) + " ";
 	for (typename T::const_iterator iter = values.begin();
 		iter != values.end(); ++iter)
 		k += *iter + " ";
 
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -351,9 +348,8 @@ inline bool RedisConnection::rpop(const char* key, T& value)
 inline bool RedisConnection::rpop(const char*key, std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "RPOP " + std::string(key);
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -387,9 +383,8 @@ inline bool RedisConnection::rpop(const char*key, std::string& value)
 inline bool RedisConnection::rpop(const char*key, char* value, unsigned int len)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "LPOP " + std::string(key);
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -425,9 +420,8 @@ inline bool RedisConnection::rpop(const char*key, char* value, unsigned int len)
 inline int RedisConnection::llen(const char* key)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "LLEN " + std::string(key);
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -467,9 +461,8 @@ inline bool RedisConnection::lindex(const char* key, int idx, T&value)
 inline bool RedisConnection::lindex(const char* key, int idx, std::string&value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = std::string("LINDEX ") + std::string(key) + " %d";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), idx);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), idx);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -499,9 +492,8 @@ inline bool RedisConnection::lindex(const char* key, int idx, std::string&value)
 inline bool RedisConnection::lindex(const char* key, int idx, char* value, int len)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = std::string("LINDEX ") + std::string(key) + " %d";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), idx);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), idx);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -540,9 +532,8 @@ inline void RedisConnection::lset(const char* key, int idx, T value)
 inline void RedisConnection::lset(const char* key, int idx, const std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = std::string("LSET ") + std::string(key) + " %d %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), idx, value.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), idx, value.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -585,7 +576,7 @@ inline int RedisConnection::lrem(const char* key, int idx, T value)
 
 	M_CHECK_REDIS_CONTEXT(_context);
 	std::string k = std::string("LREM ") + std::string(key) + " %d %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), idx, oss.str().c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), idx, oss.str().c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -614,9 +605,8 @@ inline int RedisConnection::lrem(const char* key, int idx, T value)
 inline void RedisConnection::ltrim(const char*key, int beg_idx, int end_idx)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = std::string("LTRIM ") + std::string(key) + " %d %d";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), beg_idx, end_idx);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), beg_idx, end_idx);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -655,13 +645,12 @@ inline int RedisConnection::linsert(const char* key, bool b_or_a, const T1& valu
 inline int RedisConnection::linsert(const char* key, bool b_or_a, const std::string& value1, const std::string&value2)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = std::string("LINSERT ") + std::string(key);
 	if (b_or_a)
 		k += std::string(" BEFORE ") + " %s %s";
 	else
 		k += std::string(" AFTER ") + " %s %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), value1.c_str(), value2.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), value1.c_str(), value2.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -702,8 +691,7 @@ inline bool RedisConnection::rpoplpush(const char*key1, const char*key2, T& valu
 inline bool RedisConnection::rpoplpush(const char*key1, const char*key2, std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	
-	redisReply* reply = (redisReply*)redisCommand(_context, "RPOPLPUSH %s %s",key1,key2);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "RPOPLPUSH %s %s",key1,key2);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 

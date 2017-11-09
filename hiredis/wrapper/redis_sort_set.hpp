@@ -12,10 +12,9 @@ template<typename T>
 int RedisConnection::zadd(const char*key, const T& score, const std::string& member)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	
 	std::ostringstream oss;
 	oss << score;
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZADD %s %s %s", key,oss.str().c_str(),member.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZADD %s %s %s", key,oss.str().c_str(),member.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -52,7 +51,7 @@ int RedisConnection::zadd(const char*key, const T& values)
 		oss2 << iter->second;
 		k += oss2.str() + " " + oss1.str() + " ";
 	}
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -82,7 +81,7 @@ template<typename T>
 void RedisConnection::zrange(const char*key, int beg_idx, int end_idx, T& values, typename T::value_type*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZRANGE %s %d %d", key, beg_idx, end_idx);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZRANGE %s %d %d", key, beg_idx, end_idx);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -113,7 +112,7 @@ template<typename T>
 void RedisConnection::zrange(const char*key, int beg_idx, int end_idx, T& values, std::string*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZRANGE %s %d %d", key, beg_idx,end_idx);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZRANGE %s %d %d", key, beg_idx,end_idx);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -143,7 +142,7 @@ void RedisConnection::zrangewithscores(const char* key, int beg_idx, int end_idx
 	std::pair<T2, T3>*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZRANGE %s %d %d withscores", key, beg_idx, end_idx);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZRANGE %s %d %d withscores", key, beg_idx, end_idx);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -177,7 +176,7 @@ template<typename T1, typename T2>
 void RedisConnection::zrangewithscores(const char* key, int beg_idx, int end_idx, std::map<T1, T2>& values)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZRANGE %s %d %d withscores", key, beg_idx, end_idx);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZRANGE %s %d %d withscores", key, beg_idx, end_idx);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -218,7 +217,7 @@ bool RedisConnection::zrem(const char*key, const T& member)
 bool RedisConnection::zrem(const char*key, const std::string& member)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZREM %s %s", key,member.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREM %s %s", key,member.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -253,7 +252,7 @@ int  RedisConnection::zrem(const char*key, const T& members, typename T::value_t
 		oss << *iter;
 		k += oss.str() + " ";
 	}
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -285,7 +284,7 @@ int  RedisConnection::zrem(const char*key, const T& members, std::string*)
 	std::string k = "ZREM " + std::string(key) + " ";
 	for (typename T::const_iterator iter = members.begin(); iter != members.end(); ++iter)
 		k += *iter + " ";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -316,7 +315,7 @@ template<typename T>
 void RedisConnection::zrevrange(const char*key, int beg_idx, int end_idx, T& values, typename T::value_type*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZREVRANGE %s %d %d", key, beg_idx, end_idx);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREVRANGE %s %d %d", key, beg_idx, end_idx);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -347,7 +346,7 @@ template<typename T>
 void RedisConnection::zrevrange(const char*key, int beg_idx, int end_idx, T& values, std::string*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZREVRANGE %s %d %d", key, beg_idx, end_idx);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREVRANGE %s %d %d", key, beg_idx, end_idx);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -377,7 +376,7 @@ void RedisConnection::zrevrangewithscores(const char* key, int beg_idx, int end_
 	std::pair<T2, T3>*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZREVRANGE %s %d %d withscores", key, beg_idx, end_idx);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREVRANGE %s %d %d withscores", key, beg_idx, end_idx);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -411,7 +410,7 @@ template<typename T1, typename T2>
 void RedisConnection::zrevrangewithscores(const char* key, int beg_idx, int end_idx, std::map<T1, T2>& values)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZREVRANGE  %s %d %d withscores", key, beg_idx, end_idx);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREVRANGE  %s %d %d withscores", key, beg_idx, end_idx);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -445,7 +444,7 @@ void RedisConnection::zrevrangewithscores(const char* key, int beg_idx, int end_
 bool RedisConnection::zrank(const char* key, const char* member, int& rank)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZRANK %s %s",key, member);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZRANK %s %s",key, member);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -473,7 +472,7 @@ bool RedisConnection::zrank(const char* key, const char* member, int& rank)
 bool RedisConnection::zrevrank(const char* key, const char* member, int& rank)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZREVRANK %s %s", key, member);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREVRANK %s %s", key, member);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -502,7 +501,7 @@ bool RedisConnection::zrevrank(const char* key, const char* member, int& rank)
 void RedisConnection::zcard(const char* key, int& count)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZCARD %s", key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZCARD %s", key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -533,7 +532,7 @@ void RedisConnection::zcount(const char* key, T1 min, T2 max, int& count)
 	std::ostringstream oss2;
 	oss2 << max;
 
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZCOUNT %s %s %s", key,oss1.str().c_str(),
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZCOUNT %s %s %s", key,oss1.str().c_str(),
 		oss2.str().c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
@@ -564,7 +563,7 @@ void RedisConnection::zincrby(const char* key, const char* member, T incr, T& sc
 	std::ostringstream oss;
 	oss << incr;
 
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZINCRBY %s %s %s", key, oss.str().c_str(), member);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZINCRBY %s %s %s", key, oss.str().c_str(), member);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -597,7 +596,7 @@ void RedisConnection::zrangebyscore(const char* key, T1 min, T2 max, T3& values,
 	std::ostringstream oss2;
 	oss2 << max;
 
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZRANGEBYSCORE %s %s %s", key, oss1.str().c_str(),
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZRANGEBYSCORE %s %s %s", key, oss1.str().c_str(),
 		oss2.str().c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
@@ -634,7 +633,7 @@ void RedisConnection::zrangebyscore(const char* key, T1 min, T2 max, T3& values,
 	std::ostringstream oss2;
 	oss2 << max;
 
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZRANGEBYSCORE %s %s %s", key, oss1.str().c_str(),
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZRANGEBYSCORE %s %s %s", key, oss1.str().c_str(),
 		oss2.str().c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
@@ -669,7 +668,7 @@ void RedisConnection::zrevrangebyscore(const char* key, T1 min, T2 max, T3& valu
 	std::ostringstream oss2;
 	oss2 << max;
 
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZREVRANGEBYSCORE %s %s %s", key, oss1.str().c_str(),
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREVRANGEBYSCORE %s %s %s", key, oss1.str().c_str(),
 		oss2.str().c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
@@ -706,7 +705,7 @@ void RedisConnection::zrevrangebyscore(const char* key, T1 min, T2 max, T3& valu
 	std::ostringstream oss2;
 	oss2 << max;
 
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZREVRANGEBYSCORE %s %s %s", key, oss1.str().c_str(),
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREVRANGEBYSCORE %s %s %s", key, oss1.str().c_str(),
 		oss2.str().c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
@@ -736,7 +735,7 @@ template<typename T>
 void RedisConnection::zscore(const char* key, const char* member, T& score)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-	redisReply* reply = (redisReply*)redisCommand(_context, "ZSCORE  %s %s", key,member);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZSCORE  %s %s", key,member);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 

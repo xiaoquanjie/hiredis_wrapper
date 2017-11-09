@@ -11,9 +11,8 @@ inline int RedisConnection::hset(const char* key, const char* field, const T& va
 inline int RedisConnection::hset(const char* key, const char* field, const std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "HSET " + std::string(key) + " %s %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), field, value.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), field, value.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -59,9 +58,8 @@ inline void RedisConnection::hget(const char* key, const char* field, T& value)
 inline void RedisConnection::hget(const char* key, const char* field, std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "HGET " + std::string(key) + " %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), field);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), field);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -87,9 +85,8 @@ inline void RedisConnection::hget(const char* key, const char* field, std::strin
 inline void RedisConnection::hget(const char* key, const char* field, char* value, unsigned int len)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "HGET " + std::string(key) + " %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), field);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), field);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -120,7 +117,7 @@ void RedisConnection::hgetall(const char* key, std::map<T1, T2>& values)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 	std::string k = "HGETALL %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(),key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(),key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -157,7 +154,7 @@ void RedisConnection::hgetall(const char* key, T1& values, std::pair<T2, T3>*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
 	std::string k = "HGETALL %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -200,9 +197,8 @@ inline bool RedisConnection::hsetnx(const char* key, const char* field, const T&
 inline bool RedisConnection::hsetnx(const char* key, const char* field, const std::string& value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "HSETNX " + std::string(key) + " %s %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), field, value.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), field, value.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -243,8 +239,8 @@ void RedisConnection::hmset(const char* key, const std::map<T1, T2>& values)
 {
 	if (values.empty())
 		return;
-	M_CHECK_REDIS_CONTEXT(_context);
 
+	M_CHECK_REDIS_CONTEXT(_context);
 	std::string k = "HMSET " + std::string(key) + " ";
 	for (typename std::map<T1, T2>::const_iterator iter = values.begin();
 		iter != values.end(); ++iter) {
@@ -255,7 +251,7 @@ void RedisConnection::hmset(const char* key, const std::map<T1, T2>& values)
 		k += oss1.str() + " " + oss2.str() + " ";
 	}
 
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -285,8 +281,8 @@ void RedisConnection::hmset(const char* key, const T1& values, std::pair<T2, T3>
 {
 	if (values.empty())
 		return;
-	M_CHECK_REDIS_CONTEXT(_context);
 
+	M_CHECK_REDIS_CONTEXT(_context);
 	std::string k = "HMSET " + std::string(key) + " ";
 	for (typename T1::const_iterator iter = values.begin();
 		iter != values.end(); ++iter) {
@@ -297,7 +293,7 @@ void RedisConnection::hmset(const char* key, const T1& values, std::pair<T2, T3>
 		k += oss1.str() + " " + oss2.str() + " ";
 	}
 
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -328,15 +324,15 @@ inline void RedisConnection::hmget(const char* key, std::vector<TriangleValule<T
 {
 	if (values.empty())
 		return;
-	M_CHECK_REDIS_CONTEXT(_context);
 
+	M_CHECK_REDIS_CONTEXT(_context);
 	std::string k = "HMGET " + std::string(key) + " ";
 	for (typename std::vector<TriangleValule<T1, T2> >::iterator iter = values.begin();
 		iter != values.end(); ++iter) {
 		k += iter->Key() + " ";
 	}
 
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -377,9 +373,8 @@ template<typename T>
 inline void RedisConnection::hincrby(const char* key, const char* field, int step, T& new_value)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "HINCRBY %s %s %d ";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(),key,field,step);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(),key,field,step);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -411,9 +406,8 @@ inline void RedisConnection::hincrby(const char* key, const char* field, int ste
 bool RedisConnection::hexists(const char* key, const char*field)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "HEXISTS %s %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), key, field);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), key, field);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -441,9 +435,8 @@ bool RedisConnection::hexists(const char* key, const char*field)
 int RedisConnection::hlen(const char* key)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "HLEN %s ";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -471,9 +464,8 @@ int RedisConnection::hlen(const char* key)
 bool RedisConnection::hdel(const char* key, const char*field)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "HDEL %s %s";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), key, field);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), key, field);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -510,9 +502,8 @@ template<typename T>
 void RedisConnection::hkeys(const char*key, T& values, typename T::value_type*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "HKEYS %s ";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -543,9 +534,8 @@ template<typename T>
 void RedisConnection::hkeys(const char*key, T& values, std::string*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "HKEYS %s ";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(),key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(),key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -575,9 +565,8 @@ template<typename T>
 void RedisConnection::hvals(const char*key, T& values, typename T::value_type*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "HVALS %s ";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -608,9 +597,8 @@ template<typename T>
 void RedisConnection::hvals(const char*key, T& values, std::string*)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "HVALS %s ";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), key);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), key);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 

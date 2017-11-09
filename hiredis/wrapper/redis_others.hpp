@@ -2,10 +2,10 @@
 #define M_REDIS_OTHERS_INCLUDE
 
 inline RedisConnection::RedisConnection()
-	:_context(0),_reconn_time(0){}
+	:_context(0){}
 
-inline RedisConnection::RedisConnection(redisContext* context)
-	: _context(context),_reconn_time(0){}
+inline RedisConnection::RedisConnection(_rediscontext_* context)
+	: _context(context){}
 
 unsigned long long RedisConnection::ConnectionId()const {
 	unsigned long long v = (unsigned long long)(_context);
@@ -15,9 +15,8 @@ unsigned long long RedisConnection::ConnectionId()const {
 inline bool RedisConnection::expire(const char* key, time_t expire)
 {
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "EXPIRE " + std::string(key) + " %d";
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str(), expire);
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), expire);
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
@@ -56,14 +55,13 @@ int RedisConnection::del(const T& keys)
 		return 0;
 
 	M_CHECK_REDIS_CONTEXT(_context);
-
 	std::string k = "DEL ";
 	for (typename T::const_iterator iter = keys.begin();
 		iter != keys.end(); ++iter) {
 		k += *iter + " ";
 	}
 
-	redisReply* reply = (redisReply*)redisCommand(_context, k.c_str());
+	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
 		throw RedisException(M_ERR_REDIS_REPLY_NULL);
 
