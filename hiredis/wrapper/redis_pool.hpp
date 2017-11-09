@@ -6,6 +6,7 @@
 #include <set>
 
 // Note: A redisContext is not thread - safe.
+// netstat -n | awk '/^tcp/ {++S[$NF]} END {for(a in S) print a, S[a]}'
 
 // 线程局部对象
 template<typename T>
