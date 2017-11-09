@@ -18,8 +18,8 @@ inline bool RedisConnection::expire(const char* key, time_t expire)
 	std::string k = "EXPIRE " + std::string(key) + " %d";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), expire);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
-
+		M_CLOSE_CONNECTION(this);
+	
 	int success_flag = 0;
 	RedisException error;
 	do
@@ -63,7 +63,7 @@ int RedisConnection::del(const T& keys)
 
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	int size = 0;
 	RedisException error;

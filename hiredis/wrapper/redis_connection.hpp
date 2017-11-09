@@ -342,6 +342,13 @@ private:
 
 #define M_CHECK_REDIS_CONTEXT(context)\
 	if (!_context) throw RedisException(M_ERR_REDIS_NOT_CONNECTED);
+
 #define M_REDIS_CONTEXT(context) context->_context
+
+#define M_CLOSE_CONNECTION(conn) {\
+	RedisException e(conn->_context->_context->errstr);\
+    RedisPool::ReleaseConnection(*conn);\
+    throw e;}
+
 
 #endif

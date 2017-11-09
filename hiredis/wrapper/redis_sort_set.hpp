@@ -16,7 +16,7 @@ int RedisConnection::zadd(const char*key, const T& score, const std::string& mem
 	oss << score;
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZADD %s %s %s", key,oss.str().c_str(),member.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	int ret = 0;
 	RedisException error;
@@ -53,7 +53,7 @@ int RedisConnection::zadd(const char*key, const T& values)
 	}
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	int ret = 0;
 	RedisException error;
@@ -83,7 +83,7 @@ void RedisConnection::zrange(const char*key, int beg_idx, int end_idx, T& values
 	M_CHECK_REDIS_CONTEXT(_context);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZRANGE %s %d %d", key, beg_idx, end_idx);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -114,7 +114,7 @@ void RedisConnection::zrange(const char*key, int beg_idx, int end_idx, T& values
 	M_CHECK_REDIS_CONTEXT(_context);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZRANGE %s %d %d", key, beg_idx,end_idx);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do 
@@ -144,7 +144,7 @@ void RedisConnection::zrangewithscores(const char* key, int beg_idx, int end_idx
 	M_CHECK_REDIS_CONTEXT(_context);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZRANGE %s %d %d withscores", key, beg_idx, end_idx);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do 
@@ -178,7 +178,7 @@ void RedisConnection::zrangewithscores(const char* key, int beg_idx, int end_idx
 	M_CHECK_REDIS_CONTEXT(_context);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZRANGE %s %d %d withscores", key, beg_idx, end_idx);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -219,7 +219,7 @@ bool RedisConnection::zrem(const char*key, const std::string& member)
 	M_CHECK_REDIS_CONTEXT(_context);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREM %s %s", key,member.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	bool ret = false;
 	RedisException error;
@@ -254,7 +254,7 @@ int  RedisConnection::zrem(const char*key, const T& members, typename T::value_t
 	}
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	int ret = false;
 	RedisException error;
@@ -286,7 +286,7 @@ int  RedisConnection::zrem(const char*key, const T& members, std::string*)
 		k += *iter + " ";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	int ret = false;
 	RedisException error;
@@ -317,7 +317,7 @@ void RedisConnection::zrevrange(const char*key, int beg_idx, int end_idx, T& val
 	M_CHECK_REDIS_CONTEXT(_context);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREVRANGE %s %d %d", key, beg_idx, end_idx);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -348,7 +348,7 @@ void RedisConnection::zrevrange(const char*key, int beg_idx, int end_idx, T& val
 	M_CHECK_REDIS_CONTEXT(_context);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREVRANGE %s %d %d", key, beg_idx, end_idx);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -378,7 +378,7 @@ void RedisConnection::zrevrangewithscores(const char* key, int beg_idx, int end_
 	M_CHECK_REDIS_CONTEXT(_context);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREVRANGE %s %d %d withscores", key, beg_idx, end_idx);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -412,7 +412,7 @@ void RedisConnection::zrevrangewithscores(const char* key, int beg_idx, int end_
 	M_CHECK_REDIS_CONTEXT(_context);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREVRANGE  %s %d %d withscores", key, beg_idx, end_idx);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -446,7 +446,7 @@ bool RedisConnection::zrank(const char* key, const char* member, int& rank)
 	M_CHECK_REDIS_CONTEXT(_context);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZRANK %s %s",key, member);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	bool ret = false;
 	RedisException error;
@@ -474,7 +474,7 @@ bool RedisConnection::zrevrank(const char* key, const char* member, int& rank)
 	M_CHECK_REDIS_CONTEXT(_context);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREVRANK %s %s", key, member);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	bool ret = false;
 	RedisException error;
@@ -503,7 +503,7 @@ void RedisConnection::zcard(const char* key, int& count)
 	M_CHECK_REDIS_CONTEXT(_context);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZCARD %s", key);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -535,7 +535,7 @@ void RedisConnection::zcount(const char* key, T1 min, T2 max, int& count)
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZCOUNT %s %s %s", key,oss1.str().c_str(),
 		oss2.str().c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -565,7 +565,7 @@ void RedisConnection::zincrby(const char* key, const char* member, T incr, T& sc
 
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZINCRBY %s %s %s", key, oss.str().c_str(), member);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do 
@@ -599,7 +599,7 @@ void RedisConnection::zrangebyscore(const char* key, T1 min, T2 max, T3& values,
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZRANGEBYSCORE %s %s %s", key, oss1.str().c_str(),
 		oss2.str().c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -636,7 +636,7 @@ void RedisConnection::zrangebyscore(const char* key, T1 min, T2 max, T3& values,
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZRANGEBYSCORE %s %s %s", key, oss1.str().c_str(),
 		oss2.str().c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do 
@@ -671,7 +671,7 @@ void RedisConnection::zrevrangebyscore(const char* key, T1 min, T2 max, T3& valu
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREVRANGEBYSCORE %s %s %s", key, oss1.str().c_str(),
 		oss2.str().c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -708,7 +708,7 @@ void RedisConnection::zrevrangebyscore(const char* key, T1 min, T2 max, T3& valu
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZREVRANGEBYSCORE %s %s %s", key, oss1.str().c_str(),
 		oss2.str().c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -737,7 +737,7 @@ void RedisConnection::zscore(const char* key, const char* member, T& score)
 	M_CHECK_REDIS_CONTEXT(_context);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "ZSCORE  %s %s", key,member);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do

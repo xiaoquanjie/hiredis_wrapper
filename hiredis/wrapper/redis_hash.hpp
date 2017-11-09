@@ -14,7 +14,7 @@ inline int RedisConnection::hset(const char* key, const char* field, const std::
 	std::string k = "HSET " + std::string(key) + " %s %s";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), field, value.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	int ret = 0;
 	RedisException error;
@@ -61,7 +61,7 @@ inline void RedisConnection::hget(const char* key, const char* field, std::strin
 	std::string k = "HGET " + std::string(key) + " %s";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), field);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do 
@@ -88,7 +88,7 @@ inline void RedisConnection::hget(const char* key, const char* field, char* valu
 	std::string k = "HGET " + std::string(key) + " %s";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), field);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -119,7 +119,7 @@ void RedisConnection::hgetall(const char* key, std::map<T1, T2>& values)
 	std::string k = "HGETALL %s";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(),key);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do 
@@ -156,7 +156,7 @@ void RedisConnection::hgetall(const char* key, T1& values, std::pair<T2, T3>*)
 	std::string k = "HGETALL %s";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), key);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -200,7 +200,7 @@ inline bool RedisConnection::hsetnx(const char* key, const char* field, const st
 	std::string k = "HSETNX " + std::string(key) + " %s %s";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), field, value.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	bool ret = 0;
 	RedisException error;
@@ -253,7 +253,7 @@ void RedisConnection::hmset(const char* key, const std::map<T1, T2>& values)
 
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -295,7 +295,7 @@ void RedisConnection::hmset(const char* key, const T1& values, std::pair<T2, T3>
 
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -334,7 +334,7 @@ inline void RedisConnection::hmget(const char* key, std::vector<TriangleValule<T
 
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do 
@@ -376,7 +376,7 @@ inline void RedisConnection::hincrby(const char* key, const char* field, int ste
 	std::string k = "HINCRBY %s %s %d ";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(),key,field,step);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do 
@@ -409,7 +409,7 @@ bool RedisConnection::hexists(const char* key, const char*field)
 	std::string k = "HEXISTS %s %s";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), key, field);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	bool ret = false;
 	RedisException error;
@@ -438,7 +438,7 @@ int RedisConnection::hlen(const char* key)
 	std::string k = "HLEN %s ";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), key);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	int ret = false;
 	RedisException error;
@@ -467,7 +467,7 @@ bool RedisConnection::hdel(const char* key, const char*field)
 	std::string k = "HDEL %s %s";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), key, field);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	bool ret = false;
 	RedisException error;
@@ -505,7 +505,7 @@ void RedisConnection::hkeys(const char*key, T& values, typename T::value_type*)
 	std::string k = "HKEYS %s ";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), key);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -537,7 +537,7 @@ void RedisConnection::hkeys(const char*key, T& values, std::string*)
 	std::string k = "HKEYS %s ";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(),key);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do 
@@ -568,7 +568,7 @@ void RedisConnection::hvals(const char*key, T& values, typename T::value_type*)
 	std::string k = "HVALS %s ";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), key);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -600,7 +600,7 @@ void RedisConnection::hvals(const char*key, T& values, std::string*)
 	std::string k = "HVALS %s ";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), key);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do

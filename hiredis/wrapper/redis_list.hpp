@@ -31,7 +31,7 @@ int RedisConnection::lpush(const char* key, const T& values, typename T::value_t
 
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	int size = 0;
 	RedisException error;
@@ -68,7 +68,7 @@ int RedisConnection::lpush(const char* key, const T& values, std::string*)
 
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	int size = 0;
 	RedisException error;
@@ -101,7 +101,7 @@ void RedisConnection::lrange(const char* key, int beg_idx, int end_idx, T& value
 	std::string k = "LRANGE " + std::string(key) + " %d %d";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), beg_idx, end_idx);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -134,7 +134,7 @@ void RedisConnection::lrange(const char* key, int beg_idx, int end_idx, T& value
 	std::string k = "LRANGE " + std::string(key) + " %d %d";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), beg_idx, end_idx);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -176,7 +176,7 @@ inline bool RedisConnection::lpop(const char*key, std::string& value)
 	std::string k = "LPOP " + std::string(key);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	bool ret = false;
 	RedisException error;
@@ -211,7 +211,7 @@ inline bool RedisConnection::lpop(const char*key, char* value, unsigned int len)
 	std::string k = "LPOP " + std::string(key);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	bool ret = false;
 	RedisException error;
@@ -272,7 +272,7 @@ int RedisConnection::rpush(const char* key, const T& values, typename T::value_t
 
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	int size = 0;
 	RedisException error;
@@ -309,7 +309,7 @@ int RedisConnection::rpush(const char* key, const T& values, std::string*)
 
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	int size = 0;
 	RedisException error;
@@ -351,7 +351,7 @@ inline bool RedisConnection::rpop(const char*key, std::string& value)
 	std::string k = "RPOP " + std::string(key);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	bool ret = false;
 	RedisException error;
@@ -386,7 +386,7 @@ inline bool RedisConnection::rpop(const char*key, char* value, unsigned int len)
 	std::string k = "LPOP " + std::string(key);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	bool ret = false;
 	RedisException error;
@@ -423,7 +423,7 @@ inline int RedisConnection::llen(const char* key)
 	std::string k = "LLEN " + std::string(key);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	int len = 0;
 	RedisException error;
@@ -464,7 +464,7 @@ inline bool RedisConnection::lindex(const char* key, int idx, std::string&value)
 	std::string k = std::string("LINDEX ") + std::string(key) + " %d";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), idx);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	bool ret = false;
 	RedisException error;
@@ -495,7 +495,7 @@ inline bool RedisConnection::lindex(const char* key, int idx, char* value, int l
 	std::string k = std::string("LINDEX ") + std::string(key) + " %d";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), idx);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	bool ret = false;
 	RedisException error;
@@ -535,7 +535,7 @@ inline void RedisConnection::lset(const char* key, int idx, const std::string& v
 	std::string k = std::string("LSET ") + std::string(key) + " %d %s";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), idx, value.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do 
@@ -578,7 +578,7 @@ inline int RedisConnection::lrem(const char* key, int idx, T value)
 	std::string k = std::string("LREM ") + std::string(key) + " %d %s";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), idx, oss.str().c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	int len = 0;
 	RedisException error;
@@ -608,7 +608,7 @@ inline void RedisConnection::ltrim(const char*key, int beg_idx, int end_idx)
 	std::string k = std::string("LTRIM ") + std::string(key) + " %d %d";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), beg_idx, end_idx);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	RedisException error;
 	do
@@ -652,7 +652,7 @@ inline int RedisConnection::linsert(const char* key, bool b_or_a, const std::str
 		k += std::string(" AFTER ") + " %s %s";
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), k.c_str(), value1.c_str(), value2.c_str());
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	int len = 0;
 	RedisException error;
@@ -693,7 +693,7 @@ inline bool RedisConnection::rpoplpush(const char*key1, const char*key2, std::st
 	M_CHECK_REDIS_CONTEXT(_context);
 	redisReply* reply = (redisReply*)redisCommand(M_REDIS_CONTEXT(_context), "RPOPLPUSH %s %s",key1,key2);
 	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+		M_CLOSE_CONNECTION(this);
 
 	bool ret = false;
 	RedisException error;
