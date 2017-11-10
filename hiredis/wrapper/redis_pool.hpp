@@ -137,12 +137,11 @@ RedisConnection RedisPool::GetConnection(const std::string& ip, unsigned short p
 		_context_->_port = port;
 		_context_->_db = database;
 		_context_->_ref = 2;
+
 		pinfo->_info[unique_id] = (void*)_context_;
 		pinfo->_revinfo[_context_] = unique_id;
-		{
-			_redis_detail::ScopedLock scoped_l(_mutex);
-			_contexts._contexts.insert(_context_);
-		}
+		_redis_detail::ScopedLock scoped_l(_mutex);
+		_contexts._contexts.insert(_context_);
 		return RedisConnection(_context_);
 	}
 }
@@ -196,10 +195,8 @@ void RedisPool::_releaseConnection(_rediscontext_* context)
 
 		pinfo->_info.erase(iter->second);
 		pinfo->_revinfo.erase(iter);
-		{
-			_redis_detail::ScopedLock scoped_l(_mutex);
-			_contexts._contexts.erase(context);
-		}
+		_redis_detail::ScopedLock scoped_l(_mutex);
+		_contexts._contexts.erase(context);
 	} while (false);
 	_freeRedisContext(context->_context);
 	context->_context = 0;
