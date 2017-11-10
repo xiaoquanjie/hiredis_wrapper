@@ -615,21 +615,28 @@ void pause_cmd() {
 
 void thread_func(void*) {
 
+	RedisConnection conn1 = RedisPool::GetConnection("127.0.0.1", 6379, 0);
 	try {
 		//for (int i = 0; i < 2; ++i)
 		{
-			RedisConnection conn1 = RedisPool::GetConnection("127.0.0.1", 6379, 0);
-			cout << RedisPool::GetConnectionCnt() << endl;
+			cout << conn1.getrefcnt() << endl;
+			{
+				RedisConnection conn2 = conn1;
+				RedisConnection conn3;
+				conn3 = conn1;
+				RedisConnection conn4;
+				conn2 = conn1;
+				cout << conn2.getrefcnt() << endl;
+			}
+			cout << conn1.getrefcnt() << endl;
 			pause_cmd();
 			conn1.del("mykey");
-			//RedisConnection conn2 = RedisPool::GetConnection("127.0.0.1", 6379, 1);
-			//cout << thread::ctid() << " " << conn1.ConnectionId() << " " << conn2.ConnectionId() << endl;
 		}
 	}
 	catch (RedisException&e) {
 		cout << e.What() << endl;
 	}
-	cout << RedisPool::GetConnectionCnt() << endl;
+	cout << conn1.getrefcnt() << endl;
 }
 
 int main()

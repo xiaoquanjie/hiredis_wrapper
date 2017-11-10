@@ -11,6 +11,7 @@ struct _rediscontext_ {
 	std::string    _ip;
 	unsigned short _port;
 	unsigned short _db;
+	unsigned int   _ref;  // when _ref equal zero,object would be freed
 };
 
 // redisÁ¬½Ó
@@ -23,11 +24,19 @@ public:
 
 	inline RedisConnection(_rediscontext_* context);
 
+	inline RedisConnection(const RedisConnection& conn);
+
+	inline ~RedisConnection();
+
+	inline RedisConnection& operator=(const RedisConnection& conn);
+
 	bool connected()const {
 		return (_context != 0);
 	}
 
-	unsigned long long ConnectionId()const;
+	inline unsigned long long connectionid()const;
+
+	inline unsigned int getrefcnt()const;
 
 	// ³¬Ê±ÃüÁî
 	inline bool expire(const char* key, time_t expire);
@@ -341,7 +350,7 @@ private:
 
 
 #define M_CHECK_REDIS_CONTEXT(context)\
-	if (!_context) throw RedisException(M_ERR_REDIS_NOT_CONNECTED);
+	if (!context || !context->_context) throw RedisException(M_ERR_REDIS_NOT_CONNECTED);
 
 #define M_REDIS_CONTEXT(context) context->_context
 

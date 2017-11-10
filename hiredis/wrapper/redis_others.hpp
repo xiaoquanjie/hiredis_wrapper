@@ -7,9 +7,43 @@ inline RedisConnection::RedisConnection()
 inline RedisConnection::RedisConnection(_rediscontext_* context)
 	: _context(context){}
 
-unsigned long long RedisConnection::ConnectionId()const {
+inline RedisConnection::RedisConnection(const RedisConnection& conn) {
+	if (conn._context)
+		conn._context->_ref++;
+	this->_context = conn._context;
+}
+
+inline RedisConnection::~RedisConnection(){
+	if (_context) {
+		_context->_ref--;
+		if (_context->_ref <= 0)
+			delete _context;
+	}
+}
+
+inline RedisConnection& RedisConnection::operator=(const RedisConnection& conn) {
+	if (_context != conn._context) {
+		if (_context) {
+			_context->_ref--;
+			if (_context->_ref <= 0)
+				delete _context;
+		}
+		if (conn._context)
+			conn._context->_ref++;
+		_context = conn._context;
+	}
+	return *this;
+}
+
+inline unsigned long long RedisConnection::connectionid()const {
 	unsigned long long v = (unsigned long long)(_context);
 	return v;
+}
+
+inline unsigned int RedisConnection::getrefcnt()const {
+	if (!_context)
+		return 0;
+	return _context->_ref;
 }
 
 inline bool RedisConnection::expire(const char* key, time_t expire)
