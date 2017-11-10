@@ -608,28 +608,40 @@ void other_cmd() {
 	}
 }
 
+void pause_cmd() {
+	int i;
+	cin >> i;
+}
+
 void thread_func(void*) {
 
-	for (int i = 0; i < 2; ++i)
-	{
-		RedisConnection conn1 = RedisPool::GetConnection("127.0.0.1", 6379, 0);
-		RedisConnection conn2 = RedisPool::GetConnection("127.0.0.1", 6379, 1);
-		cout << thread::ctid() << " " << conn1.ConnectionId() << " " << conn2.ConnectionId() << endl;
+	try {
+		//for (int i = 0; i < 2; ++i)
+		{
+			RedisConnection conn1 = RedisPool::GetConnection("127.0.0.1", 6379, 0);
+			cout << RedisPool::GetConnectionCnt() << endl;
+			pause_cmd();
+			conn1.del("mykey");
+			//RedisConnection conn2 = RedisPool::GetConnection("127.0.0.1", 6379, 1);
+			//cout << thread::ctid() << " " << conn1.ConnectionId() << " " << conn2.ConnectionId() << endl;
+		}
 	}
-	
+	catch (RedisException&e) {
+		cout << e.What() << endl;
+	}
+	cout << RedisPool::GetConnectionCnt() << endl;
 }
 
 int main()
 {
-	cout << sizeof(unsigned long long) << endl;
+	//cout << sizeof(unsigned long long) << endl;
 	thread thr1(&thread_func, 0);
 	thread::sleep(200);
-	thread thr2(&thread_func, 0);
+	//thread thr2(&thread_func, 0);
 
 	thr1.join();
-	thr2.join();
+	//thr2.join();
 
-	int i = 0;
-	cin >> i;
+	pause_cmd();
 	return 0;
 }

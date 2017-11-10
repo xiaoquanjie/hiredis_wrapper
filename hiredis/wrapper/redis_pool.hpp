@@ -81,6 +81,8 @@ public:
 	// ÊÍ·ÅÁ¬½Ó
 	static void ReleaseConnection(RedisConnection& con);
 
+	static size_t GetConnectionCnt();
+
 private:
 	static void _releaseConnection(_rediscontext_* context);
 
@@ -148,8 +150,9 @@ bool RedisPool::_selectdb(redisContext* context, unsigned short db)
 		return false;
 
 	redisReply* reply = (redisReply*)redisCommand(context,"select %d",db);
-	if (!reply)
-		throw RedisException(M_ERR_REDIS_REPLY_NULL);
+	if (!reply) {
+		throw RedisException(context->errstr);
+	}
 
 	RedisException error;
 	do
@@ -190,7 +193,10 @@ void RedisPool::_releaseConnection(_rediscontext_* context)
 
 		pinfo->_info.erase(iter->second);
 		pinfo->_revinfo.erase(iter);
-		_contexts._contexts.erase(context);
+		{
+			_redis_detail::ScopedLock scoped_l(_mutex);
+			_contexts._contexts.erase(context);
+		}
 	} while (false);
 	_freeRedisContext(context->_context);
 }
@@ -205,6 +211,10 @@ void RedisPool::ReleaseConnection(RedisConnection& con)
 void RedisPool::_freeRedisContext(redisContext* context)
 {
 	redisFree(context);
+}
+
+size_t RedisPool::GetConnectionCnt() {
+	return _contexts._contexts.size();
 }
 
 #endif
