@@ -94,12 +94,12 @@ private:
 _redisinfoset_ RedisPool::_contexts;
 _redis_detail::MutexLock RedisPool::_mutex;
 
-RedisConnection RedisPool::GetConnection(const std::string& ip, unsigned short port)
+inline RedisConnection RedisPool::GetConnection(const std::string& ip, unsigned short port)
 {
 	return GetConnection(ip, port, 0);
 }
 
-RedisConnection RedisPool::GetConnection(const std::string& ip, unsigned short port, unsigned short database)
+inline RedisConnection RedisPool::GetConnection(const std::string& ip, unsigned short port, unsigned short database)
 {
 	typedef ThreadLocalData<int> RedisDataType;
 	if (!RedisDataType::_pt) {
@@ -146,7 +146,7 @@ RedisConnection RedisPool::GetConnection(const std::string& ip, unsigned short p
 	}
 }
 
-bool RedisPool::_selectdb(redisContext* context, unsigned short db)
+inline bool RedisPool::_selectdb(redisContext* context, unsigned short db)
 {
 	if (!context)
 		return false;
@@ -180,7 +180,7 @@ bool RedisPool::_selectdb(redisContext* context, unsigned short db)
 	return true;
 }
 
-void RedisPool::_releaseConnection(_rediscontext_* context)
+inline void RedisPool::_releaseConnection(_rediscontext_* context)
 {
 	do 
 	{
@@ -202,7 +202,7 @@ void RedisPool::_releaseConnection(_rediscontext_* context)
 	context->_context = 0;
 }
 
-void RedisPool::ReleaseConnection(RedisConnection& con)
+inline void RedisPool::ReleaseConnection(RedisConnection& con)
 {
 	_releaseConnection(con._context);
 	con._context->_ref--;
@@ -212,12 +212,12 @@ void RedisPool::ReleaseConnection(RedisConnection& con)
 	}
 }
 
-void RedisPool::_freeRedisContext(redisContext* context)
+inline void RedisPool::_freeRedisContext(redisContext* context)
 {
 	redisFree(context);
 }
 
-size_t RedisPool::GetConnectionCnt() {
+inline size_t RedisPool::GetConnectionCnt() {
 	return _contexts._contexts.size();
 }
 
